@@ -50,6 +50,7 @@ Registrar la entrega de productos a clientes.
 
 Instalar dependencias 
 -pip install decouple --> crear archivo .env en la carpeta raiz del proyecto  para guardar configuracion
+-pip install mysql 
 
 
 
