@@ -6,7 +6,21 @@ from .forms import RegistrationForm
 
 # Create your views here.
 def index(request):
-    return render(request,'index.html')
+    if request.user.is_authenticated:
+        vendedor = request.user.groups.filter(name='Vendedor').exists()
+        bodeguero = request.user.groups.filter(name='Bodeguero').exists()
+        contador = request.user.groups.filter(name='Contador').exists()
+    else:
+        vendedor = False
+        bodeguero = False
+        contador = False
+    
+    data = {
+        'vendedor': vendedor,
+        'bodeguero': bodeguero,
+        'contador': contador,
+    }
+    return render(request, 'index.html', data)
 
 def auth_login(request):
     if request.method == 'POST':

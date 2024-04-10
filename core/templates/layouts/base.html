@@ -25,13 +25,13 @@
                     <a class="nav-link link-opt" aria-current="page" href="{%url 'index' %}">Inicio</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="#">link 2 </a>
+                    <a class="nav-link link-opt" aria-current="page" href="#">Vendedor Vista</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="#">link 3</a>
+                    <a class="nav-link link-opt" aria-current="page" href="#">Bodeguero Vista</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="#">link 4</a>
+                    <a class="nav-link link-opt" aria-current="page" href="#">Contador Vista</a>
                   </li>
                 </ul>
                 <form class="d-flex" role="search" action="" method="GET">
@@ -51,13 +51,16 @@
                           {% endif %} 
                         <ul class="dropdown-menu">
                           {% if user.is_authenticated %} 
-                          <li><a class="dropdown-item" href="{% url 'logout' %}">Desconectar</a></li>
+                          <li><a class="dropdown-item" href="{% url 'exit' %}">Desconectar</a></li>
                           {% else %} 
                           <li><a class="dropdown-item" href="{% url 'auth_login' %}">Ingresar</a></li>
                           <li><a class="dropdown-item" href="{% url 'auth_register' %}">Registrarse</a></li>
                           {% endif %} 
                         </ul>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link link-opt" aria-current="page" href="http://127.0.0.1:8000/admin">Admin</a>
+                    </li>  
                 </ul>
               </div>
             </div>
