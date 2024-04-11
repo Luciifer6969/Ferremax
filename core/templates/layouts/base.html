@@ -24,18 +24,24 @@
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="{%url 'index' %}">Inicio</a>
                   </li>
-                  
+                  <li class="nav-item">
+                    <a class="nav-link link-opt" aria-current="page" href="#">Productos</a>
+                  </li>
+                  {% if perms.core.view_producto %}
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="#">Vendedor Vista</a>
                   </li>
-                  
+                  {% endif %}
+                  {% if perms.core.view_pedido %}
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="#">Bodeguero Vista</a>
                   </li>
-                  
+                  {% endif %}
+                  {% if perms.core.add_entrega %}
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="#">Contador Vista</a>
                   </li>
+                  {% endif %}
                 </ul>
                 <form class="d-flex" role="search" action="" method="GET">
                   <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" name="search_query">
@@ -79,7 +85,7 @@
       <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex align-items-center">
           <div class="container-fluid">
               <a class="navbar-brand d-flex align-items-center" href="{%url 'index' %}">
-              <img src="" alt="Caos News logo" width="30" height="24">Ferremax
+              <img src="" alt="Caos News logo" width="30" height="24">Ferremas
               </a>
 
               <div>
