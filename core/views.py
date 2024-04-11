@@ -10,6 +10,7 @@ def index(request):
         vendedor = request.user.groups.filter(name='Vendedor').exists()
         bodeguero = request.user.groups.filter(name='Bodeguero').exists()
         contador = request.user.groups.filter(name='Contador').exists()
+        print(vendedor)
     else:
         vendedor = False
         bodeguero = False
@@ -20,6 +21,7 @@ def index(request):
         'bodeguero': bodeguero,
         'contador': contador,
     }
+    print(data)
     return render(request, 'index.html', data)
 
 def auth_login(request):
