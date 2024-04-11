@@ -4,23 +4,9 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import RegistrationForm
 
-# Create your views here.
+
 def index(request):
-    if request.user.is_authenticated:
-        vendedor = request.user.groups.filter(name='Vendedor').exists()
-        bodeguero = request.user.groups.filter(name='Bodeguero').exists()
-        contador = request.user.groups.filter(name='Contador').exists()
-    else:
-        vendedor = False
-        bodeguero = False
-        contador = False
-    
-    data = {
-        'vendedor': vendedor,
-        'bodeguero': bodeguero,
-        'contador': contador,
-    }
-    return render(request, 'index.html', data)
+    return render(request, 'index.html')
 
 def auth_login(request):
     if request.method == 'POST':
