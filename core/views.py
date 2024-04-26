@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import RegistrationForm
-
+from .models import Producto,Pedido,EstadoPedido
 
 def index(request):
     return render(request, 'index.html')
@@ -52,3 +52,28 @@ def auth_register(request):
 def exit(request):
     logout(request)
     return redirect('auth_login')
+
+def stock_products(request):
+    productos = Producto.objects.all()
+
+    if not productos:
+        messages.error(request,'No existen productos registrados')
+
+    return render(request,'stock_products.html',{'productos':productos})
+
+def pedidos(request):
+    pedidos = Pedido.objects.all()
+    estados_pedidos = []
+
+    for pedido in pedidos:
+        # Acceder al nombre del estado del pedido para cada pedido
+        estado_pedido = pedido.estado.estado
+        estados_pedidos.append(estado_pedido)
+    if not pedidos:
+        messages.error(request,'No existen pedidos')
+
+    return render(request,'pedidos.html',{'pedidos':pedidos,'estados':estados_pedidos})
+
+def solicitud_bodega(request):
+    return render(request,'solicitud_bodega.html')
+
