@@ -29,7 +29,13 @@
                   </li>
                   {% if perms.core.view_producto %}
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="#">Vendedor Vista</a>
+                    <a class="nav-link link-opt" aria-current="page" href="{% url 'stock' %}">Stock disponible</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link link-opt" aria-current="page" href="{% url 'pedidos' %}">Pedidos</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link link-opt" aria-current="page" href="{% url 'solicitudes' %}">bodega solicitudes</a>
                   </li>
                   {% endif %}
                   {% if perms.core.view_pedido %}
