@@ -10,4 +10,6 @@ urlpatterns = [
     path('stock_products/',stock_products,name='stock'),
     path('pedidos/',pedidos,name='pedidos'),
     path('solicitud_bodega/',solicitud_bodega,name='solicitudes'),
+    path('cart/',cart,name='cart'),
+    path('productos/',productos,name='productos')
 ]

@@ -77,3 +77,10 @@ def pedidos(request):
 def solicitud_bodega(request):
     return render(request,'solicitud_bodega.html')
 
+def productos(request):
+    productos = Producto.objects.all()
+    
+    return render(request,'productos.html',{'producto':productos})
+
+def cart(request):
+    return render(request,'cart.html')
