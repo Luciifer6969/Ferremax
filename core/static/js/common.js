@@ -80,3 +80,17 @@ $("#usernameId").on("input", () => {
     }
   });
   
+  $("#btn-minus").click(() => {
+    const valorActual = parseInt($("#cantidadId").val());
+    if (valorActual >= 1) {
+      $('#cantidadId').val(valorActual - 1);
+    }
+  });
+
+  $("#btn-plus").click(() => {
+    const valorActual = parseInt($("#cantidadId").val());
+    if (valorActual >= 0) {
+      $('#cantidadId').val(valorActual + 1);
+    }
+  });
+

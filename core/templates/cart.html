@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="bg-dark shadow rounded p-3 w-100 w-lg-50">
+    <h1 class="rounded bg-dark p-3 text-light">Carro de compras</h1>
+</div>
+<hr>
+<div class="card shadow-lg mb-3">
+    <div class="row g-0">
+      <div class="col-md-3">
+        <img src="#" alt="Producto" class="img-fluid">
+      </div>
+      <div class="col-md-9">
+        <div class="card-body">
+          <h5 class="card-title">Nombre del Producto</h5>
+          <p class="card-text">Descripción del Producto</p>
+          <p class="card-text"><strong>Precio: $100</strong></p>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="cantidadId">Cantidad</label>
+            <button class="btn btn-outline-secondary" type="button" id="btn-minus">-</button>
+            <input type="number" class="form-control-sm" id="cantidadId" value="1" readonly>
+            <button class="btn btn-outline-secondary" type="button" id="btn-plus">+</button>
+          </div>
+          <button type="button" class="btn btn-danger">Eliminar Producto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<hr>
+<div class="card shadow-lg mb-3">
+    <div class="row justify-content-end">
+        <div class="col-md-6">
+            <div class="card-body">
+                <div class="d-flex justify-content-end">
+                    <h5 class="card-title"><strong>Total:</strong></h5>
+                    <h5 class="card-title" id="totalId"></h5>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <a href="#" class="btn btn-primary">Ir a pagar</a>
+                </div>
+            </div>    
+        </div>
+    </div>
+</div>
+{% endblock%} 

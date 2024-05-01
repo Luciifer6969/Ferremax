@@ -7,6 +7,7 @@ class Producto(models.Model):
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     cantidad_disponible = models.IntegerField()
+    imagen_url = models.URLField(max_length=200,default='https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg')
 
 class EstadoPedido(models.Model):
     estado = models.CharField(max_length=20)
