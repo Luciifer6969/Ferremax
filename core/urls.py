@@ -11,5 +11,7 @@ urlpatterns = [
     path('pedidos/',pedidos,name='pedidos'),
     path('solicitud_bodega/',solicitud_bodega,name='solicitudes'),
     path('cart/',cart,name='cart'),
-    path('productos/',productos,name='productos')
+    path('productos/',productos,name='productos'),
+    path('entrega/',entrega,name='entrega'),
+    path('edit_entrega/<int:id_entrega>/',edit_entrega,name='edit_entrega')
 ]

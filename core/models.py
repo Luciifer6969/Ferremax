@@ -14,6 +14,7 @@ class EstadoPedido(models.Model):
 
 class Pedido(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=70)
     fecha_pedido = models.DateTimeField(auto_now_add=True) 
     estado = models.ForeignKey(EstadoPedido, on_delete=models.CASCADE)  
 

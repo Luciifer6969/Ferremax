@@ -43,10 +43,13 @@
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="#">Bodeguero Vista</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link link-opt" aria-current="page" href="{% url 'pedidos' %}">Pedidos</a>
+                  </li>
                   {% endif %}
                   {% if perms.core.add_entrega %}
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="#">Contador Vista</a>
+                    <a class="nav-link link-opt" aria-current="page" href="{% url 'entrega' %}">Ver entrega de pedidos</a>
                   </li>
                   {% endif %}
                 </ul>
