@@ -1,9 +1,9 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import RegistrationForm
-from .models import Producto,Pedido,EstadoPedido
+from .models import Producto,Pedido,Entrega,EstadoEntrega
 
 def index(request):
     return render(request, 'index.html')
@@ -58,6 +58,7 @@ def stock_products(request):
 
     if not productos:
         messages.error(request,'No existen productos registrados')
+        messages.get_messages(request).used = True
 
     return render(request,'stock_products.html',{'productos':productos})
 
@@ -71,6 +72,7 @@ def pedidos(request):
         estados_pedidos.append(estado_pedido)
     if not pedidos:
         messages.error(request,'No existen pedidos')
+        messages.get_messages(request).used = True
 
     return render(request,'pedidos.html',{'pedidos':pedidos,'estados':estados_pedidos})
 
@@ -84,3 +86,53 @@ def productos(request):
 
 def cart(request):
     return render(request,'cart.html')
+
+def entrega(request):
+    entregaObj = Entrega.objects.all()
+    pedidoList = []
+    estados = []
+    estadoEntregaObj = EstadoEntrega.objects.all()
+
+    for entrega in entregaObj:
+        # Obtener el pedido asociado a esta entrega
+        pedido = entrega.pedido   
+        pedidoList.append(pedido)
+        # Obtener el estado de entrega y agregarlo a la lista de estados
+        estadoEntrega = entrega.estado_entrega.estado 
+        estados.append(estadoEntrega)
+
+    if not entregaObj:
+        messages.error(request,'No existen registros de entrega')
+        messages.get_messages(request).used = True
+
+    if not pedidoList:
+        messages.error(request,'No existen registros de pedidos') 
+        messages.get_messages(request).used = True
+
+    return render(request,'entrega.html',{'estado': estados, 'pedidos': pedidoList,'entrega':entregaObj,'estadoEntrega':estadoEntregaObj})
+
+
+def edit_entrega(request,id_entrega):
+    entregaObj = get_object_or_404(Entrega, id_entrega=id_entrega)
+    detail = Entrega.objects.get(id_entrega=entregaObj.id_entrega)
+    pedidoObj = Pedido.objects.get(id=detail.id_entrega)
+    estadoEntregaObj = EstadoEntrega.objects.all()
+
+    if not detail:
+        messages.error(request,'No existen registros de entrega')
+        messages.get_messages(request).used = True
+
+    if not pedidoObj:
+        messages.error(request,'No existen registros de pedidos') 
+        messages.get_messages(request).used = True
+
+    if request.method == 'POST':
+        estado_id = request.POST.get('estado')
+        pkEstado = EstadoEntrega.objects.get(id=estado_id)
+        entregaObj.estado_entrega = pkEstado
+        entregaObj.save()
+        messages.success(request, 'Entrega registrada correctamente', extra_tags='success')
+        messages.get_messages(request).used = True
+        return redirect('entrega')
+    else:
+        return render(request,'editar_entrega.html',{'pedidos': pedidoObj,'entrega':entregaObj,'estadoEntrega':estadoEntregaObj})
