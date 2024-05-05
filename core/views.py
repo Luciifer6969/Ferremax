@@ -1,9 +1,13 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import RegistrationForm
-from .models import Producto,Pedido,Entrega,EstadoEntrega
+from .models import Producto,Pedido,Entrega,EstadoEntrega,DetallePedido
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from .cart import Cart
 
 def index(request):
     return render(request, 'index.html')
@@ -84,8 +88,11 @@ def productos(request):
     
     return render(request,'productos.html',{'producto':productos})
 
+@login_required
 def cart(request):
-    return render(request,'cart.html')
+    cart = Cart(request)
+    cart_products = cart.get_prods
+    return render(request,'cart.html',{'productos':cart_products})
 
 def entrega(request):
     entregaObj = Entrega.objects.all()
@@ -136,3 +143,32 @@ def edit_entrega(request,id_entrega):
         return redirect('entrega')
     else:
         return render(request,'editar_entrega.html',{'pedidos': pedidoObj,'entrega':entregaObj,'estadoEntrega':estadoEntregaObj})
+    
+# @require_POST
+# def addProducttoCart(request, producto_id):
+#     productoObj = Producto.objects.get(id=producto_id)
+#     if request.user.is_authenticated:
+#         pedido, creado = Pedido.objects.get_or_create(User=request.user, estado=1)
+#     else:
+#         redirect('auth_login')    
+
+#     DetallePedido.objects.create(pedido=pedido, producto=productoObj,cantidad=1,precio_unitario=productoObj.precio) 
+#     return render(request)
+def agregar_producto(request):
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('productoId'))
+        product = get_object_or_404(Producto, id=product_id)
+        print(f'{product} ----->>>>>>>>>>>')
+        cart.add(product=product)
+        # response = JsonResponse({'Product name': product.nombre})
+
+        cart_quantity = cart.__len__()
+        response = JsonResponse({'qty': cart_quantity})
+
+        return response    
+
+
+def verProducto(request, producto_id):
+    producto = Producto.objects.get(id = producto_id)
+    return render(request, 'producto.html',{'producto':producto})

@@ -5,16 +5,17 @@
     <h1 class="rounded bg-dark p-3 text-light">Carro de compras</h1>
 </div>
 <hr>
+{% for x in productos %}
 <div class="card shadow-lg mb-3">
     <div class="row g-0">
       <div class="col-md-3">
-        <img src="#" alt="Producto" class="img-fluid">
+        <img src="{{ x.imagen_url}}" alt="Producto" class="img-fluid">
       </div>
       <div class="col-md-9">
         <div class="card-body">
-          <h5 class="card-title">Nombre del Producto</h5>
-          <p class="card-text">Descripción del Producto</p>
-          <p class="card-text"><strong>Precio: $100</strong></p>
+          <h5 class="card-title">{{ x.nombre}}</h5>
+          <p class="card-text">{{ x.descripcion}}</p>
+          <p class="card-text">{{ x.precio}}</p>
           <div class="input-group mb-3">
             <label class="input-group-text" for="cantidadId">Cantidad</label>
             <button class="btn btn-outline-secondary" type="button" id="btn-minus">-</button>
@@ -26,6 +27,20 @@
       </div>
     </div>
   </div>
+  {% endfor %} 
+  {% if not productos %}
+  <div class="container mt-5">
+    <div class="card text-center">
+      <div class="card-header">
+        No se encuentran productos en el carro
+      </div>
+      <div class="card-body">
+        <img src="https://cdn-icons-png.flaticon.com/512/102/102661.png" class="img-fluid rounded mx-auto d-block mb-3" alt="Imagen de no hay productos" width="100">
+        <p class="card-text">Lo sentimos, actualmente no hay productos disponibles en este momento.</p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 <hr>
 <div class="card shadow-lg mb-3">
     <div class="row justify-content-end">

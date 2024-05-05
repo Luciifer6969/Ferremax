@@ -13,8 +13,9 @@
                     <h5 class="card-title">{{ producto.nombre }}</h5>
                     <p class="card-text">{{ producto.descripcion }}</p>
                     <p class="card-text">${{ producto.precio }}</p>
+                    <a href="{% url 'verProducto' producto.id %}"><button class="btn btn-secondary"> Ver Producto</button></a>
                     <!-- Botón "Agregar al carrito" -->
-                    <button class="btn btn-primary agregar-al-carrito" data-producto-id="{{ producto.id }}">Agregar al carrito</button>
+                    <button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button>
                 </div>
             </div>
         </div>
