@@ -2,12 +2,21 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
+class TipoProducto(models.Model):
+    nombre = models.CharField(max_length=100)
+
+class Marca(models.Model):
+    nombre = models.CharField(max_length=100)
+
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    precio = models.DecimalField(max_digits=10, decimal_places=3)
     cantidad_disponible = models.IntegerField()
     imagen_url = models.URLField(max_length=200,default='https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg')
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+    tipo_producto = models.ForeignKey(TipoProducto, on_delete=models.CASCADE)
+
 
 class EstadoPedido(models.Model):
     estado = models.CharField(max_length=20)
