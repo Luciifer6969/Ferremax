@@ -5,9 +5,10 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import RegistrationForm
 from .models import Producto,Pedido,Entrega,EstadoEntrega,DetallePedido
-from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from .cart import Cart
+import json
+import http.client
 
 def index(request):
     return render(request, 'index.html')
@@ -85,8 +86,9 @@ def solicitud_bodega(request):
 
 def productos(request):
     productos = Producto.objects.all()
-    
-    return render(request,'productos.html',{'producto':productos})
+    return render(request, 'productos.html',{'producto':productos})
+
+
 
 @login_required
 def cart(request):
@@ -171,4 +173,75 @@ def agregar_producto(request):
 
 def verProducto(request, producto_id):
     producto = Producto.objects.get(id = producto_id)
-    return render(request, 'producto.html',{'producto':producto})
+    if request.method == 'POST':    
+        response = obtenerValoresApi(request,producto)
+        data = json.loads(response.content.decode('utf-8'))
+        nuevo_precio = data.get('nuevo_precio')
+
+        return render(request, 'producto.html',{'producto':producto,'nuevo_precio':nuevo_precio})
+    else:
+        return render(request, 'producto.html',{'producto':producto})
+def contact(request):
+    producto = Producto.objects.all()
+
+    if request.method == 'POST':
+        motivo = request.POST['motivo']
+        productoId = request.POST['productoId']
+        comment = request.POST['comment']
+
+        messages.success(request, 'Registro añadido correctamente')
+        messages.get_messages(request).used = True
+        return redirect('contact')
+    else:
+        return render(request, 'contact.html',{'producto':producto})
+
+def obtenerValoresApi(request,producto):
+    nuevo_precio = None 
+    if request.method == 'POST':
+        tipo_moneda = request.POST.get('tipo_moneda')
+        producto_id = request.POST.get('producto_id')
+
+        #consumo de la API
+        url = "mindicador.cl"
+        connection = http.client.HTTPSConnection(url)
+        connection.request('GET', '/api')
+        response = connection.getresponse()
+        data = json.loads(response.read().decode('utf-8'))
+        DataList = []
+
+        for key, value in data.items():
+            DataList.append(value)
+        
+        dolar = None
+        uf = None
+        euro = None
+        utm = None
+
+        #iterar el objeto para cada valor 
+        for item in DataList:
+            if isinstance(item, dict):
+                if item.get('codigo') == 'dolar':
+                    dolar = item.get('valor')
+                elif item.get('codigo') == 'uf':
+                    uf = item.get('valor')
+                elif item.get('codigo') == 'euro':
+                    euro = item.get('valor')
+                elif item.get('codigo') == 'utm':
+                    utm = item.get('valor')
+                    
+        #obtener id de producto       
+        if tipo_moneda == 'dolar': 
+            nuevo_precio = int(float(producto.precio) / float(dolar))
+        elif tipo_moneda == 'uf':
+            nuevo_precio = int(float(producto.precio) / float(uf))
+        elif tipo_moneda == 'euro':
+            nuevo_precio = int(float(producto.precio) / float(euro))
+        elif tipo_moneda == 'utm':
+            nuevo_precio = int(float(producto.precio) / float(utm))
+        else:
+            nuevo_precio = None
+        response_data = {'nuevo_precio': nuevo_precio}
+        print("Datos de respuesta:", response_data)
+        return JsonResponse(response_data) 
+    else:
+        return print('nofunciono')

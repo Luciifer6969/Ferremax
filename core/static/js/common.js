@@ -113,6 +113,14 @@ $('.col-md-4').on('click', '.agregar-carrito', function() {
   addProducttoCart(productoId);
 });
 
+$('.card').on('click', '.agregar-carrito', function() {
+  // Obtener el valor del producto ID del botón clickeado
+  var productoId = $(this).val();
+  console.log('Producto ID:', productoId);
+  console.log(csrftoken)
+  // Llamar a la función para agregar el producto al carrito
+  addProducttoCart(productoId);
+});
 
 function addProducttoCart(productoId) {
   // Envía una solicitud AJAX para agregar el producto al carrito
