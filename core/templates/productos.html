@@ -19,7 +19,11 @@
                     <p class="card-text"><strong>Precio: $</strong>{{ producto.precio }}</p>
                     <a href="{% url 'verProducto' producto.id %}"><button class="btn btn-secondary"> Ver Producto</button></a>
                     <!-- Botón "Agregar al carrito" -->
+                    {% if request.user.is_authenticated %}
                     <button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button>
+                    {% else %}
+                    <a href="{% url 'auth_login' %}"><button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button></a>
+                    {% endif %}
                 </div>
             </div>
         </div>
