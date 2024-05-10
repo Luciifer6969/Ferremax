@@ -1,6 +1,10 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
+<div class="bg-dark shadow rounded p-3 w-100 w-lg-50">
+    <h1 class="rounded bg-dark p-3 text-light">Productos</h1>
+</div>
+
 <div class="index-template bg-body-tertiary p-3">
 
 <div class="gallery-template d-flex flex-row mx-auto gap-5 flex-wrap justify-content-center">
@@ -12,7 +16,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ producto.nombre }}</h5>
                     <p class="card-text">{{ producto.descripcion }}</p>
-                    <p class="card-text">${{ producto.precio }}</p>
+                    <p class="card-text"><strong>Precio: $</strong>{{ producto.precio }}</p>
                     <a href="{% url 'verProducto' producto.id %}"><button class="btn btn-secondary"> Ver Producto</button></a>
                     <!-- Botón "Agregar al carrito" -->
                     <button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button>
@@ -21,7 +25,7 @@
         </div>
         <br>
         {% endfor %}
- 
+
 </div>
 </div>   
 {% endblock%} 
