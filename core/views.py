@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 from .cart import Cart
 import json
 import http.client
+import mercadopago
+
+
 
 def index(request):
     return render(request, 'index.html')
@@ -94,7 +97,30 @@ def productos(request):
 def cart(request):
     cart = Cart(request)
     cart_products = cart.get_prods
-    return render(request,'cart.html',{'productos':cart_products})
+    productoCart = cart.get_prodss()
+
+    ##clave produccion de usuario de prueba TESTUSER1085505293 pass : Hb9QJvAszT || revisar cuenta mercado pago siempre si tiene saldo
+    sdk = mercadopago.SDK("APP_USR-170340208437871-051617-b45127860d141be852b0d15af556090e-1817032202")
+    items = []
+    for product_id, details in productoCart.items():
+        product = details['product']
+        items.append({
+            "title": product.nombre,  # Asumiendo que tu modelo Producto tiene un campo nombre
+            "quantity": details['quantity'],
+            "unit_price": float(details['precio']),
+        })
+    
+    preference_data = {
+        "back_urls": {
+            "success": "http://127.0.0.1:8000/success_pay/"
+        },
+        "items": items
+    }
+    
+    preference_response = sdk.preference().create(preference_data)
+    preference = preference_response["response"]
+    return render(request,'cart.html',{'productos':cart_products,'preference':preference})
+
 
 def entrega(request):
     entregaObj = Entrega.objects.all()
@@ -181,6 +207,7 @@ def verProducto(request, producto_id):
         return render(request, 'producto.html',{'producto':producto,'nuevo_precio':nuevo_precio})
     else:
         return render(request, 'producto.html',{'producto':producto})
+    
 def contact(request):
     producto = Producto.objects.all()
 
@@ -200,6 +227,7 @@ def obtenerValoresApi(request,producto):
     if request.method == 'POST':
         tipo_moneda = request.POST.get('tipo_moneda')
         producto_id = request.POST.get('producto_id')
+        productObj = Producto.objects.get(id= producto_id)
 
         #consumo de la API
         url = "mindicador.cl"
@@ -239,9 +267,38 @@ def obtenerValoresApi(request,producto):
         elif tipo_moneda == 'utm':
             nuevo_precio = int(float(producto.precio) / float(utm))
         else:
-            nuevo_precio = None
+            nuevo_precio = productObj.precio
         response_data = {'nuevo_precio': nuevo_precio}
         print("Datos de respuesta:", response_data)
         return JsonResponse(response_data) 
     else:
         return print('nofunciono')
+    
+def success_pay(request):
+    collection_id = request.GET.get('collection_id')
+    collection_status = request.GET.get('collection_status')
+    payment_id = request.GET.get('payment_id')
+    status = request.GET.get('status')
+    external_reference = request.GET.get('external_reference')
+    payment_type = request.GET.get('payment_type')
+    merchant_order_id = request.GET.get('merchant_order_id')
+    preference_id = request.GET.get('preference_id')
+    site_id = request.GET.get('site_id')
+    processing_mode = request.GET.get('processing_mode')
+    merchant_account_id = request.GET.get('merchant_account_id') 
+
+    context = {
+        'collection_id': collection_id,
+        'collection_status': collection_status,
+        'payment_id': payment_id,
+        'status': status,
+        'external_reference': external_reference,
+        'payment_type': payment_type,
+        'merchant_order_id': merchant_order_id,
+        'preference_id': preference_id,
+        'site_id': site_id,
+        'processing_mode': processing_mode,
+        'merchant_account_id': merchant_account_id,
+    }
+
+    return render(request,'success_pay.html',context)    

@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %} 
+<p>ID de la Colección: {{ collection_id }}</p>
+    <p>Estado de la Colección: {{ collection_status }}</p>
+    <p>ID del Pago: {{ payment_id }}</p>
+    <p>Estado: {{ status }}</p>
+    <p>Referencia Externa: {{ external_reference }}</p>
+    <p>Tipo de Pago: {{ payment_type }}</p>
+    <p>ID de la Orden del Comerciante: {{ merchant_order_id }}</p>
+    <p>ID de Preferencia: {{ preference_id }}</p>
+    <p>ID del Sitio: {{ site_id }}</p>
+    <p>Modo de Procesamiento: {{ processing_mode }}</p>
+    <p>ID de la Cuenta del Comerciante: {{ merchant_account_id }}</p>
+
+{% endblock%}  
