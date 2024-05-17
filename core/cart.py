@@ -30,3 +30,19 @@ class Cart():
         products = Producto.objects.filter(id__in=product_ids)
 
         return products
+    
+    def get_prodss(self):
+        product_ids = self.cart.keys()
+        products = Producto.objects.filter(id__in=product_ids)
+        cart_products = {}
+        for product in products:
+            product_id = str(product.id)
+            if product_id in self.cart:
+                if 'quantity' not in self.cart[product_id]:
+                    self.cart[product_id]['quantity'] = 1  # Asumimos una cantidad predeterminada de 1 si falta
+                cart_products[product_id] = {
+                    'product': product,
+                    'quantity': self.cart[product_id]['quantity'],
+                    'precio': self.cart[product_id]['precio']
+                }
+        return cart_products
