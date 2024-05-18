@@ -187,3 +187,37 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+ $('.col-md-9').on('click', '.update-cart', function() {
+   // Obtener el valor del producto ID del botón clickeado
+   var productoId = $(this).data('index');
+   console.log('Producto ID:', productoId);
+   // Llamar a la función para agregar el producto al carrito
+   updateProductCart(productoId);
+ });
+
+ function updateProductCart(productoId) {
+  // Envía una solicitud AJAX para agregar el producto al carrito
+  $.ajax({
+    url: `http://127.0.0.1:8000/cart/update/`,
+    type: 'POST',
+    headers: {
+      'X-CSRFToken': getCookie('csrftoken'), // Incluye el token CSRF
+    },
+    data: {
+      productoId: productoId,
+      product_qty: $('#select' + productoId + ' option:selected').text(),
+      csrfmiddlewaretoken: getCookie('csrftoken'), // Asegúrate de que el nombre del token CSRF sea correcto
+      action: 'post'},
+      success: function(json){
+              // document.getElementById('cart_quantity').
+              // textContent = json.qty
+              location.reload();
+              console.log('gae')
+
+      },  
+
+      error: function(xhr, status, error) {
+      console.error('Error al actualizar el producto al carrito:', error);
+     }
+   });
+ };
