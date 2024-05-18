@@ -107,20 +107,18 @@ $("#usernameId").on("input", () => {
 $('.col-md-4').on('click', '.agregar-carrito', function() {
   // Obtener el valor del producto ID del botón clickeado
   var productoId = $(this).val();
-  console.log('Producto ID:', productoId);
-  console.log(csrftoken)
   // Llamar a la función para agregar el producto al carrito
   addProducttoCart(productoId);
 });
 
-$('.card').on('click', '.agregar-carrito', function() {
-  // Obtener el valor del producto ID del botón clickeado
-  var productoId = $(this).val();
-  console.log('Producto ID:', productoId);
-  console.log(csrftoken)
-  // Llamar a la función para agregar el producto al carrito
-  addProducttoCart(productoId);
-});
+// $('.card').on('click', '.agregar-carrito', function() {
+//   // Obtener el valor del producto ID del botón clickeado
+//   var productoId = $(this).val();
+//   console.log('Producto ID:', productoId);
+//   console.log(csrftoken)
+//   // Llamar a la función para agregar el producto al carrito
+//   addProducttoCart(productoId);
+// });
 
 function addProducttoCart(productoId) {
   // Envía una solicitud AJAX para agregar el producto al carrito
@@ -145,30 +143,6 @@ function addProducttoCart(productoId) {
    });
  };
 
-// $(document).on('click', '.agregar-carrito', function(e){
-//   e.preventDefault();
-//   var productoId = $(this).val(); // Obtener el valor del botón clickeado
-  
-//   $.ajax({
-//     type: 'POST',
-//     url: '', // Ajusta la URL según sea necesario
-//     data: {
-//       productoId: productoId,
-//       csrfmiddlewaretoken: '{{ csrftoken }}', // Asegúrate de que el nombre del token CSRF sea correcto
-//       action: 'post'
-//     },
-
-//     success: function(json){
-//       console.log(json);
-//       // Manejar la respuesta del servidor si es necesario
-//     },
-
-//     error: function(xhr,errmsg,err){
-//       // Manejar errores
-//     }
-
-//   });
-// });
 
 function getCookie(name) {
   let cookieValue = null;
@@ -191,7 +165,6 @@ const csrftoken = getCookie('csrftoken');
  $('.col-md-9').on('click', '.update-cart', function() {
    // Obtener el valor del producto ID del botón clickeado
    var productoId = $(this).data('index');
-   console.log('Producto ID:', productoId);
    // Llamar a la función para agregar el producto al carrito
    updateProductCart(productoId);
  });
@@ -213,7 +186,6 @@ const csrftoken = getCookie('csrftoken');
               // document.getElementById('cart_quantity').
               // textContent = json.qty
               location.reload();
-              console.log('gae')
 
       },  
 
