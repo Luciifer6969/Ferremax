@@ -1,16 +1,22 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %} 
-<p>ID de la Colección: {{ collection_id }}</p>
-    <p>Estado de la Colección: {{ collection_status }}</p>
-    <p>ID del Pago: {{ payment_id }}</p>
-    <p>Estado: {{ status }}</p>
-    <p>Referencia Externa: {{ external_reference }}</p>
-    <p>Tipo de Pago: {{ payment_type }}</p>
-    <p>ID de la Orden del Comerciante: {{ merchant_order_id }}</p>
-    <p>ID de Preferencia: {{ preference_id }}</p>
-    <p>ID del Sitio: {{ site_id }}</p>
-    <p>Modo de Procesamiento: {{ processing_mode }}</p>
-    <p>ID de la Cuenta del Comerciante: {{ merchant_account_id }}</p>
+<div class="bg-dark shadow rounded p-3 w-100 w-lg-50">
+    <h1 class="rounded bg-dark p-3 text-light">Estado de compra</h1>
+</div>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Comprobante de Pago</h4>
+        </div>
+        <div class="card-body">
+            <p class="mb-2"><strong>ID de la Orden del Comerciante:</strong> {{ merchant_order_id }}</p>
+            <p class="mb-2"><strong>ID del Pago:</strong> {{ payment_id }}</p>
+            <p class="mb-2"><strong>Estado:</strong> {{ status }}</p>
+            <p class="mb-2"><strong>Tipo de Pago:</strong> {{ payment_type }}</p>
+        </div>
+    </div>
+</div>
+
 
 {% endblock%}  

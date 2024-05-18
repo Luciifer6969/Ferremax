@@ -15,13 +15,25 @@
         <div class="card-body">
           <h5 class="card-title">{{ x.nombre}}</h5>
           <p class="card-text">{{ x.descripcion}}</p>
-          <p class="card-text">{{ x.precio}}</p>
-          <div class="input-group mb-3">
+          <p class="card-text"><strong>Precio: $</strong>{{ x.precio}}</p>
+          <!-- <div class="input-group mb-3">
             <label class="input-group-text" for="cantidadId">Cantidad</label>
             <button class="btn btn-outline-secondary" type="button" id="btn-minus">-</button>
-            <input type="number" class="form-control-sm" id="cantidadId" value="1" readonly>
+            <input type="number" class="form-control-sm" id="cantidadId" value="0" readonly>
             <button class="btn btn-outline-secondary" type="button" id="btn-plus">+</button>
-          </div>
+          </div> -->
+          <div class="col-md-3">
+          <select class="form-select form-select-sm" aria-label="Default select example" id="select{{x.id}}">
+            <option selected disabled>Elige una cantidad</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+          </select>
+        </div>
+          <br><br>
+          <button type="button" class="btn btn-secondary update-cart" data-index="{{x.id}}">Agregar Cantidad</button>
           <button type="button" class="btn btn-danger">Eliminar Producto</button>
         </div>
       </div>

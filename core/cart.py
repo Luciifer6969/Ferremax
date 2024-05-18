@@ -38,11 +38,21 @@ class Cart():
         for product in products:
             product_id = str(product.id)
             if product_id in self.cart:
-                if 'quantity' not in self.cart[product_id]:
-                    self.cart[product_id]['quantity'] = 1  # Asumimos una cantidad predeterminada de 1 si falta
                 cart_products[product_id] = {
                     'product': product,
-                    'quantity': self.cart[product_id]['quantity'],
-                    'precio': self.cart[product_id]['precio']
+                    'quantity': self.cart[product_id],
+                    'precio': product.precio
                 }
         return cart_products
+    
+    def update(self, product, quantity):
+        product_id = str(product)
+        product_qty = int(quantity)
+
+        outcart = self.cart
+        outcart[product_id] = product_qty
+
+        self.session.modified = True    
+
+        update = self.cart
+        return update        

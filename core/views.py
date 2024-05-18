@@ -102,12 +102,21 @@ def cart(request):
     ##clave produccion de usuario de prueba TESTUSER1085505293 pass : Hb9QJvAszT || revisar cuenta mercado pago siempre si tiene saldo
     sdk = mercadopago.SDK("APP_USR-170340208437871-051617-b45127860d141be852b0d15af556090e-1817032202")
     items = []
+
     for product_id, details in productoCart.items():
         product = details['product']
+
+        try:
+            quantity = details['quantity']
+            unit_price = float(details['precio'])
+        except (ValueError, TypeError) as e:
+            print(f"Error en conversión de cantidad o precio: {e}")
+            continue 
+
         items.append({
             "title": product.nombre,  # Asumiendo que tu modelo Producto tiene un campo nombre
-            "quantity": details['quantity'],
-            "unit_price": float(details['precio']),
+            "quantity": quantity,
+            "unit_price": unit_price,
         })
     
     preference_data = {
@@ -187,7 +196,6 @@ def agregar_producto(request):
     if request.POST.get('action') == 'post':
         product_id = int(request.POST.get('productoId'))
         product = get_object_or_404(Producto, id=product_id)
-        print(f'{product} ----->>>>>>>>>>>')
         cart.add(product=product)
         # response = JsonResponse({'Product name': product.nombre})
 
@@ -195,7 +203,15 @@ def agregar_producto(request):
         response = JsonResponse({'qty': cart_quantity})
 
         return response    
-
+    
+def update_producto(request):
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('productoId'))
+        product_qty = int(request.POST.get('product_qty'))
+        cart.update(product=product_id,quantity=product_qty)
+        response = JsonResponse({'cantidadProd':product_qty})     
+        return response
 
 def verProducto(request, producto_id):
     producto = Producto.objects.get(id = producto_id)
@@ -302,3 +318,4 @@ def success_pay(request):
     }
 
     return render(request,'success_pay.html',context)    
+
