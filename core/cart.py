@@ -17,7 +17,7 @@ class Cart():
         if product_id in self.cart:
             pass
         else:
-            self.cart[product_id]= {'precio': str(product.precio)}    
+            self.cart[product_id]= 0  
 
         self.session.modified = True
 
@@ -62,4 +62,21 @@ class Cart():
         if product_id in self.cart:
             del self.cart[product_id]
             
-        self.session.modified =True          
+        self.session.modified =True  
+
+
+    def cart_total(self):
+        product_ids = self.cart.keys()
+        products = Producto.objects.filter(id__in=product_ids)
+        quantities = self.cart
+        total = 0 
+        for key, value in quantities.items():
+            key = int(key)
+            for product in products:
+                if product.id == key:
+                    total = total + (float(product.precio) * value)
+        return total 
+
+    def get_quants(self):
+        quantities = self.cart
+        return quantities            

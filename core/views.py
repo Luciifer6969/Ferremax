@@ -98,7 +98,8 @@ def cart(request):
     cart = Cart(request)
     cart_products = cart.get_prods
     productoCart = cart.get_prodss()
-
+    total = cart.cart_total()
+    cantidad = cart.get_quants 
     ##clave produccion de usuario de prueba TESTUSER1085505293 pass : Hb9QJvAszT || revisar cuenta mercado pago siempre si tiene saldo
     sdk = mercadopago.SDK("APP_USR-170340208437871-051617-b45127860d141be852b0d15af556090e-1817032202")
     items = []
@@ -128,7 +129,9 @@ def cart(request):
     
     preference_response = sdk.preference().create(preference_data)
     preference = preference_response["response"]
-    return render(request,'cart.html',{'productos':cart_products,'preference':preference})
+    print(items)
+    print(cantidad)
+    return render(request,'cart.html',{'productos':cart_products,'preference':preference,'items':cantidad,'total':total})
 
 
 def entrega(request):
