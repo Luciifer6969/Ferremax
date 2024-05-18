@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import RegistrationForm
-from .models import Producto,Pedido,Entrega,EstadoEntrega,DetallePedido
+from .models import Producto,Pedido,Entrega,EstadoEntrega,Contact
 from django.contrib.auth.decorators import login_required
 from .cart import Cart
 import json
@@ -239,11 +239,41 @@ def contact(request):
         productoId = request.POST['productoId']
         comment = request.POST['comment']
 
+        #obtener producto de id 
+        productObj = Producto.objects.get(id=productoId) 
+
+        contact = Contact(
+            motivo=motivo,
+            producto=productObj,
+            usuario=request.user,
+            comentario=comment,
+        )
+        contact.save()
         messages.success(request, 'Registro añadido correctamente')
         messages.get_messages(request).used = True
         return redirect('contact')
     else:
         return render(request, 'contact.html',{'producto':producto})
+
+def consulta_cliente(request):
+    consultas = Contact.objects.all()
+    if request.method == 'POST':
+        respuesta = request.POST['respuesta']
+        contact_id = request.POST['contact_id']
+        contact = Contact(
+            respuesta = respuesta
+        )
+        contact = get_object_or_404(Contact, id=contact_id)
+        contact.respuesta = respuesta
+        contact.save()
+
+    return  render(request, 'consultas_cliente.html',{'data':consultas})
+
+def mis_consultas(request,user_id):
+    userObj = User.objects.get(id=user_id)
+    data = Contact.objects.filter(usuario= userObj)
+
+    return render(request,'mis_consultas.html',{'data':data})
 
 def obtenerValoresApi(request,producto):
     nuevo_precio = None 
