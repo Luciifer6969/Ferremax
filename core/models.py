@@ -50,3 +50,10 @@ class Entrega(models.Model):
     pedido = models.OneToOneField(Pedido, on_delete=models.CASCADE)
     fecha_entrega = models.DateTimeField()
     estado_entrega = models.ForeignKey(EstadoEntrega, on_delete=models.CASCADE)
+
+class Contact(models.Model):
+    motivo = models.CharField(max_length=100)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    comentario = models.CharField(max_length=100)
+    respuesta = models.CharField(max_length=100,null=True, blank=True)

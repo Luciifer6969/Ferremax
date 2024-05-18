@@ -28,9 +28,20 @@
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="{%url 'productos' %}">Productos</a>
                   </li>
-                  {% if request.user.is_authenticated %}
+                  {% if perms.core.add_contact %}
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="{%url 'contact' %}">Consultar Producto</a>
+                    <a class="nav-link link-opt" aria-current="page" href="{%url 'consultaCliente' %}">Consultas Clientes</a>
+                  </li>
+                  {% endif %}
+                  {% if request.user.is_authenticated %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link link-opt dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Consultas
+                    </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{%url 'contact' %}">Consultar Producto</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_consultas' request.user.id %}">Mis Consultas</a></li>
+                  </ul>
                   </li>
                   {% endif %}
                   {% if perms.core.view_producto %}
