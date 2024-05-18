@@ -187,6 +187,7 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+//actualizar cantidad de producto en el carro de compras 
  $('.col-md-9').on('click', '.update-cart', function() {
    // Obtener el valor del producto ID del botón clickeado
    var productoId = $(this).data('index');
@@ -221,3 +222,31 @@ const csrftoken = getCookie('csrftoken');
      }
    });
  };
+
+//borra un producto del carro de compras 
+$('.col-md-9').on('click', '.delete-cart', function() {
+  var productoId = $(this).data('index');
+  deleteProductCart(productoId);
+});
+
+function deleteProductCart(productoId) {
+ // Envía una solicitud AJAX para agregar el producto al carrito
+ $.ajax({
+   url: `http://127.0.0.1:8000/cart/delete/`,
+   type: 'POST',
+   headers: {
+     'X-CSRFToken': getCookie('csrftoken'), // Incluye el token CSRF
+   },
+   data: {
+     productoId: productoId,
+     csrfmiddlewaretoken: getCookie('csrftoken'), // Asegúrate de que el nombre del token CSRF sea correcto
+     action: 'post'},
+     success: function(json){
+      location.reload();
+     },  
+
+     error: function(xhr, status, error) {
+     console.error('Error al actualizar el producto al carrito:', error);
+    }
+  });
+};

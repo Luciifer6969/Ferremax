@@ -181,16 +181,7 @@ def edit_entrega(request,id_entrega):
     else:
         return render(request,'editar_entrega.html',{'pedidos': pedidoObj,'entrega':entregaObj,'estadoEntrega':estadoEntregaObj})
     
-# @require_POST
-# def addProducttoCart(request, producto_id):
-#     productoObj = Producto.objects.get(id=producto_id)
-#     if request.user.is_authenticated:
-#         pedido, creado = Pedido.objects.get_or_create(User=request.user, estado=1)
-#     else:
-#         redirect('auth_login')    
-
-#     DetallePedido.objects.create(pedido=pedido, producto=productoObj,cantidad=1,precio_unitario=productoObj.precio) 
-#     return render(request)
+#agregar producto a la sesion
 def agregar_producto(request):
     cart = Cart(request)
     if request.POST.get('action') == 'post':
@@ -202,8 +193,9 @@ def agregar_producto(request):
         cart_quantity = cart.__len__()
         response = JsonResponse({'qty': cart_quantity})
 
-        return response    
-    
+        return response 
+       
+#actualizar producto a la sesion    
 def update_producto(request):
     cart = Cart(request)
     if request.POST.get('action') == 'post':
@@ -212,6 +204,18 @@ def update_producto(request):
         cart.update(product=product_id,quantity=product_qty)
         response = JsonResponse({'cantidadProd':product_qty})     
         return response
+    
+#eliminar producto de la sesion 
+def delete_producto(request):
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('productoId'))
+        cart.delete(product=product_id)
+        response = JsonResponse({'product':product_id})
+
+    return response
+
+
 
 def verProducto(request, producto_id):
     producto = Producto.objects.get(id = producto_id)
