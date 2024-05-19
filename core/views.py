@@ -3,8 +3,9 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
+import requests
 from .forms import RegistrationForm
-from .models import Producto,Pedido,Entrega,EstadoEntrega,Contact
+from .models import Producto,Pedido,Entrega,EstadoEntrega,Contact,Marca,TipoProducto
 from django.contrib.auth.decorators import login_required
 from .cart import Cart
 import json
@@ -356,3 +357,82 @@ def success_pay(request):
 
     return render(request,'success_pay.html',context)    
 
+def obtener_datos_api(request):
+
+    if request.method == 'POST':
+        if 'FormProducto' in request.POST:    
+            url = 'https://localhost:7249/api/Producto'
+            headers = {'accept': '*/*'}
+
+            response = requests.get(url, headers=headers, verify=False) 
+            if response.status_code == 200:
+                datos = response.json()
+
+                for item in datos:
+                    producto_id = item['id']
+                    if Producto.objects.filter(id=producto_id).exists():
+                        messages.error(request, f"El Producto con ID {producto_id} ya existe en la base de datos.")
+                        return redirect('getApi')
+                    else:
+                        marca_id = item['marca_id']
+                        tipo_producto_id = item['tipoProducto_id']
+
+                        try:
+                            marcaObj = Marca.objects.get(id=item['marca_id'])
+
+                        except Marca.DoesNotExist:
+                            messages.error(request, f"La marca con ID {marca_id} no existe.")
+                            return redirect('getApi')
+
+                        try: 
+                            tipoProdObj = TipoProducto.objects.get(id=item['tipoProducto_id'])     
+                        except TipoProducto.DoesNotExist:        
+                            messages.error(request, f"El Tipo Producto con ID {tipo_producto_id} no existe.")
+                            return redirect('getApi')
+
+                        Producto.objects.create(
+                            nombre=item['nombre'],
+                            precio=item['precio'],
+                            cantidad_disponible=item['cantidad_disponible'],
+                            descripcion = item['descripcion'],
+                            imagen_url = item['imagen_url'],
+                            marca = marcaObj,
+                            tipo_producto = tipoProdObj)
+                                        
+        elif 'FormMarca' in request.POST:
+            url = 'https://localhost:7249/api/Marcas' 
+            headers = {'accept': '*/*'}
+
+            response = requests.get(url, headers=headers, verify=False) 
+            if response.status_code == 200:
+                datos = response.json()
+
+                for item in datos:
+                    marcaId = item['id']
+                    if Marca.objects.filter(id=marcaId).exists():
+                        messages.error(request, f"La Marca con ID {marcaId} ya existe en la base de datos.")
+                        return redirect('getApi')
+                    else:
+                        Marca.objects.create(
+                            nombre = item['nombre']
+                            )
+        elif 'FormTipoProducto' in request.POST:
+           url = 'https://localhost:7249/api/TipoProducto'
+           headers = {'accept': '*/*'}
+
+           response = requests.get(url, headers=headers, verify=False) 
+           if response.status_code == 200:
+                datos = response.json()
+
+                for item in datos:
+                    categoriaId = item['id']
+                    if TipoProducto.objects.filter(id=categoriaId).exists():
+                        messages.error(request, f"El tipo Producto con ID {categoriaId} ya existe en la base de datos.")
+                        return redirect('getApi')
+                    else:
+                        TipoProducto.objects.create(
+                            nombre = item['nombre']
+                            )                    
+    else:
+        datos = ''    
+    return render(request, 'getApi.html')    
