@@ -21,5 +21,6 @@ urlpatterns = [
     path('contact/',contact, name='contact'),
     path('success_pay/',success_pay,name='successPay'),
     path('consultas_clientes',consulta_cliente,name='consultaCliente'),
-    path('mis_consultas/<int:user_id>',mis_consultas,name='mis_consultas')
+    path('mis_consultas/<int:user_id>',mis_consultas,name='mis_consultas'),
+    path('getApi/',obtener_datos_api,name='getApi'),
 ]
