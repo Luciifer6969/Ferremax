@@ -31,7 +31,11 @@
           <p class="card-text"><strong>Precio: $</strong>{{ producto.precio }}</p>
           {% endif %}
           <a href="{% url 'contact' %}"><button class="btn btn-danger" >Consultar por producto</button></a>
+          {% if request.user.is_authenticated %}
           <button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button>
+          {% else %}
+          <a href="{% url 'auth_login' %}"><button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button></a>
+          {% endif %}
         </div>
     </div>    
 </div>

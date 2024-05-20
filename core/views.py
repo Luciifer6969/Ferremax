@@ -88,9 +88,30 @@ def pedidos(request):
 def solicitud_bodega(request):
     return render(request,'solicitud_bodega.html')
 
+# views.py
+from django.shortcuts import render
+from .models import Producto, TipoProducto
+
 def productos(request):
+    tipo_producto_id = request.GET.get('tipo_producto')
     productos = Producto.objects.all()
-    return render(request, 'productos.html',{'producto':productos})
+    categoria = None
+    
+    if tipo_producto_id:
+        try:
+            tipo_producto_id = int(tipo_producto_id)
+            categoria = Producto.objects.filter(tipo_producto_id=tipo_producto_id)
+        except ValueError:
+            pass  # Si no es un entero, no hace nada adicional
+    
+    tipos_producto = TipoProducto.objects.all()
+    context = {
+        'productos': productos if categoria is None else categoria,
+        'tipos_producto': tipos_producto,
+        'categoria_actual': tipo_producto_id if categoria else None,
+    }
+    return render(request, 'productos.html', context)
+
 
 
 
@@ -123,7 +144,7 @@ def cart(request):
     
     preference_data = {
         "back_urls": {
-            "success": "http://127.0.0.1:8000/success_pay/"
+            "success": "http://127.0.0.1:8000/success_pay/",
         },
         "items": items
     }
@@ -276,57 +297,47 @@ def mis_consultas(request,user_id):
 
     return render(request,'mis_consultas.html',{'data':data})
 
-def obtenerValoresApi(request,producto):
-    nuevo_precio = None 
+def obtenerValoresApi(request, producto):
+    nuevo_precio = None
     if request.method == 'POST':
         tipo_moneda = request.POST.get('tipo_moneda')
         producto_id = request.POST.get('producto_id')
-        productObj = Producto.objects.get(id= producto_id)
+        productObj = Producto.objects.get(id=producto_id)
 
-        #consumo de la API
+        # Consumo de la API
         url = "mindicador.cl"
         connection = http.client.HTTPSConnection(url)
         connection.request('GET', '/api')
         response = connection.getresponse()
-        data = json.loads(response.read().decode('utf-8'))
-        DataList = []
-
-        for key, value in data.items():
-            DataList.append(value)
         
-        dolar = None
-        uf = None
-        euro = None
-        utm = None
+        if response.status != 200:
+            return JsonResponse({'error': 'Error al conectar con la API'}, status=500)
+        
+        data = json.loads(response.read().decode('utf-8'))
+        
+        # Variables para almacenar los valores de las monedas
+        dolar = data.get('dolar', {}).get('valor')
+        uf = data.get('uf', {}).get('valor')
+        euro = data.get('euro', {}).get('valor')
+        utm = data.get('utm', {}).get('valor')
 
-        #iterar el objeto para cada valor 
-        for item in DataList:
-            if isinstance(item, dict):
-                if item.get('codigo') == 'dolar':
-                    dolar = item.get('valor')
-                elif item.get('codigo') == 'uf':
-                    uf = item.get('valor')
-                elif item.get('codigo') == 'euro':
-                    euro = item.get('valor')
-                elif item.get('codigo') == 'utm':
-                    utm = item.get('valor')
-                    
-        #obtener id de producto       
-        if tipo_moneda == 'dolar': 
-            nuevo_precio = int(float(producto.precio) / float(dolar))
-        elif tipo_moneda == 'uf':
-            nuevo_precio = int(float(producto.precio) / float(uf))
-        elif tipo_moneda == 'euro':
-            nuevo_precio = int(float(producto.precio) / float(euro))
-        elif tipo_moneda == 'utm':
-            nuevo_precio = int(float(producto.precio) / float(utm))
+        # Verificar que los valores no sean None antes de hacer la conversión
+        if tipo_moneda == 'dolar' and dolar is not None:
+            nuevo_precio = round(float(producto.precio) / float(dolar), 3)  # Redondear a 3 decimales
+        elif tipo_moneda == 'uf' and uf is not None:
+            nuevo_precio = round(float(producto.precio) / float(uf), 3)  # Redondear a 3 decimales
+        elif tipo_moneda == 'euro' and euro is not None:
+            nuevo_precio = round(float(producto.precio) / float(euro), 3)  # Redondear a 3 decimales
+        elif tipo_moneda == 'utm' and utm is not None:
+            nuevo_precio = round(float(producto.precio) / float(utm), 3)  # Redondear a 3 decimales
         else:
             nuevo_precio = productObj.precio
+        
         response_data = {'nuevo_precio': nuevo_precio}
         print("Datos de respuesta:", response_data)
-        return JsonResponse(response_data) 
+        return JsonResponse(response_data)
     else:
-        return print('nofunciono')
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
     
 def success_pay(request):
     collection_id = request.GET.get('collection_id')
@@ -355,6 +366,7 @@ def success_pay(request):
         'merchant_account_id': merchant_account_id,
     }
 
+
     return render(request,'success_pay.html',context)    
 
 def obtener_datos_api(request):
@@ -370,35 +382,31 @@ def obtener_datos_api(request):
 
                 for item in datos:
                     producto_id = item['id']
-                    if Producto.objects.filter(id=producto_id).exists():
-                        messages.error(request, f"El Producto con ID {producto_id} ya existe en la base de datos.")
+                    # if Producto.objects.filter(id=producto_id).exists():
+                    #     messages.error(request, f"El Producto con ID {producto_id} ya existe en la base de datos.")
+                    #     return redirect('getApi')
+                    # else:
+                    marca_id = item['marca_id']
+                    tipo_producto_id = item['tipoProducto_id']
+                    try:
+                        marcaObj = Marca.objects.get(id=item['marca_id'])
+                    except Marca.DoesNotExist:
+                        messages.error(request, f"La marca con ID {marca_id} no existe.")
                         return redirect('getApi')
-                    else:
-                        marca_id = item['marca_id']
-                        tipo_producto_id = item['tipoProducto_id']
-
-                        try:
-                            marcaObj = Marca.objects.get(id=item['marca_id'])
-
-                        except Marca.DoesNotExist:
-                            messages.error(request, f"La marca con ID {marca_id} no existe.")
-                            return redirect('getApi')
-
-                        try: 
-                            tipoProdObj = TipoProducto.objects.get(id=item['tipoProducto_id'])     
-                        except TipoProducto.DoesNotExist:        
-                            messages.error(request, f"El Tipo Producto con ID {tipo_producto_id} no existe.")
-                            return redirect('getApi')
-
-                        Producto.objects.create(
-                            nombre=item['nombre'],
-                            precio=item['precio'],
-                            cantidad_disponible=item['cantidad_disponible'],
-                            descripcion = item['descripcion'],
-                            imagen_url = item['imagen_url'],
-                            marca = marcaObj,
-                            tipo_producto = tipoProdObj)
-                                        
+                    try: 
+                        tipoProdObj = TipoProducto.objects.get(id=item['tipoProducto_id'])     
+                    except TipoProducto.DoesNotExist:        
+                        messages.error(request, f"El Tipo Producto con ID {tipo_producto_id} no existe.")
+                        return redirect('getApi')
+                    Producto.objects.create(
+                        nombre=item['nombre'],
+                        precio=item['precio'],
+                        cantidad_disponible=item['cantidad_disponible'],
+                        descripcion = item['descripcion'],
+                        imagen_url = item['imagen_url'],
+                        marca = marcaObj,
+                        tipo_producto = tipoProdObj)
+                                    
         elif 'FormMarca' in request.POST:
             url = 'https://localhost:7249/api/Marcas' 
             headers = {'accept': '*/*'}
@@ -409,11 +417,11 @@ def obtener_datos_api(request):
 
                 for item in datos:
                     marcaId = item['id']
-                    if Marca.objects.filter(id=marcaId).exists():
-                        messages.error(request, f"La Marca con ID {marcaId} ya existe en la base de datos.")
-                        return redirect('getApi')
-                    else:
-                        Marca.objects.create(
+                    # if Marca.objects.filter(id=marcaId).exists():
+                    #     messages.error(request, f"La Marca con ID {marcaId} ya existe en la base de datos.")
+                    #     return redirect('getApi')
+                    # else:
+                    Marca.objects.create(
                             nombre = item['nombre']
                             )
         elif 'FormTipoProducto' in request.POST:
@@ -426,11 +434,11 @@ def obtener_datos_api(request):
 
                 for item in datos:
                     categoriaId = item['id']
-                    if TipoProducto.objects.filter(id=categoriaId).exists():
-                        messages.error(request, f"El tipo Producto con ID {categoriaId} ya existe en la base de datos.")
-                        return redirect('getApi')
-                    else:
-                        TipoProducto.objects.create(
+                    # if TipoProducto.objects.filter(id=categoriaId).exists():
+                    #     messages.error(request, f"El tipo Producto con ID {categoriaId} ya existe en la base de datos.")
+                    #     return redirect('getApi')
+                    # else:
+                    TipoProducto.objects.create(
                             nombre = item['nombre']
                             )                    
     else:
