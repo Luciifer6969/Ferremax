@@ -39,8 +39,8 @@
                       Consultas
                     </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{%url 'contact' %}">Consultar Producto</a></li>
-                    <li><a class="dropdown-item" href="{% url 'mis_consultas' request.user.id %}">Mis Consultas</a></li>
+                    <li><a class="dropdown-item" href="{%url 'contact' %}">Consultar producto</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_consultas' request.user.id %}">Mis consultas</a></li>
                   </ul>
                   </li>
                   {% endif %}
@@ -51,21 +51,17 @@
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="{% url 'pedidos' %}">Pedidos</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="{% url 'solicitudes' %}">bodega solicitudes</a>
-                  </li>
                   {% endif %}
                   {% if perms.core.view_pedido %}
-                  <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="#">Bodeguero Vista</a>
-                  </li>
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="{% url 'pedidos' %}">Pedidos</a>
                   </li>
                   {% endif %}
+                  {% if perms.core.view_pedido %}
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="{% url 'getApi' %}">apiapi</a>
+                    <a class="nav-link link-opt" aria-current="page" href="{% url 'getApi' %}">Agregar productos</a>
                   </li>
+                  {% endif %}
                   {% if perms.core.add_entrega %}
                   <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="{% url 'entrega' %}">Ver entrega de pedidos</a>

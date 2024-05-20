@@ -6,30 +6,44 @@
 </div>
 
 <div class="index-template bg-body-tertiary p-3">
-
-<div class="gallery-template d-flex flex-row mx-auto gap-5 flex-wrap justify-content-center">
-        <!-- Iterar sobre los productos recuperados de la base de datos -->
-        {% for producto in producto %}
-        <div class="col-md-4">
-            <div class="card shadow-lg d-flex align-items-center justify-content-center">
-                <img src="{{ producto.imagen_url }}" class="card-img-top" alt="foto">
-                <div class="card-body">
-                    <h5 class="card-title">{{ producto.nombre }}</h5>
-                    <p class="card-text">{{ producto.descripcion }}</p>
-                    <p class="card-text"><strong>Precio: $</strong>{{ producto.precio }}</p>
-                    <a href="{% url 'verProducto' producto.id %}"><button class="btn btn-secondary"> Ver Producto</button></a>
-                    <!-- Botón "Agregar al carrito" -->
-                    {% if request.user.is_authenticated %}
-                    <button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button>
-                    {% else %}
-                    <a href="{% url 'auth_login' %}"><button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button></a>
-                    {% endif %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-3">
+                <h4>Categorías</h4>
+                <ul class="list-group">
+                    <li class="list-group-item {% if not categoria_actual %}active{% endif %}">
+                        <a href="{% url 'productos' %}">Todos</a>
+                    </li>
+                    {% for tipo in tipos_producto %}
+                    <li class="list-group-item {% if tipo.id|stringformat:"d" == categoria_actual %}active{% endif %}">
+                        <a href="{% url 'productos' %}?tipo_producto={{ tipo.id }}">{{ tipo.nombre }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div class="gallery-template d-flex flex-row mx-auto gap-5 flex-wrap justify-content-center">
+                    {% for producto in productos %}
+                    <div class="col-md-4">
+                        <div class="card shadow-lg d-flex align-items-center justify-content-center">
+                            <img src="{{ producto.imagen_url }}" class="card-img-top" alt="foto">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ producto.nombre }}</h5>
+                                <p class="card-text">{{ producto.descripcion }}</p>
+                                <p class="card-text"><strong>Precio: $</strong>{{ producto.precio }}</p>
+                                <a href="{% url 'verProducto' producto.id %}"><button class="btn btn-secondary">Ver Producto</button></a>
+                                {% if request.user.is_authenticated %}
+                                <button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button>
+                                {% else %}
+                                <a href="{% url 'auth_login' %}"><button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <br>
-        {% endfor %}
-
+    </div>
 </div>
-</div>   
-{% endblock%} 
+{% endblock %}
