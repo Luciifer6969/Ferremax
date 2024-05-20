@@ -381,23 +381,8 @@ def obtener_datos_api(request):
                 datos = response.json()
 
                 for item in datos:
-                    producto_id = item['id']
-                    # if Producto.objects.filter(id=producto_id).exists():
-                    #     messages.error(request, f"El Producto con ID {producto_id} ya existe en la base de datos.")
-                    #     return redirect('getApi')
-                    # else:
-                    marca_id = item['marca_id']
-                    tipo_producto_id = item['tipoProducto_id']
-                    try:
-                        marcaObj = Marca.objects.get(id=item['marca_id'])
-                    except Marca.DoesNotExist:
-                        messages.error(request, f"La marca con ID {marca_id} no existe.")
-                        return redirect('getApi')
-                    try: 
-                        tipoProdObj = TipoProducto.objects.get(id=item['tipoProducto_id'])     
-                    except TipoProducto.DoesNotExist:        
-                        messages.error(request, f"El Tipo Producto con ID {tipo_producto_id} no existe.")
-                        return redirect('getApi')
+                    marcaObj = Marca.objects.get(id=item['marca_id'])
+                    tipoProdObj = TipoProducto.objects.get(id=item['tipoProducto_id'])     
                     Producto.objects.create(
                         nombre=item['nombre'],
                         precio=item['precio'],
@@ -416,11 +401,6 @@ def obtener_datos_api(request):
                 datos = response.json()
 
                 for item in datos:
-                    marcaId = item['id']
-                    # if Marca.objects.filter(id=marcaId).exists():
-                    #     messages.error(request, f"La Marca con ID {marcaId} ya existe en la base de datos.")
-                    #     return redirect('getApi')
-                    # else:
                     Marca.objects.create(
                             nombre = item['nombre']
                             )
@@ -433,11 +413,6 @@ def obtener_datos_api(request):
                 datos = response.json()
 
                 for item in datos:
-                    categoriaId = item['id']
-                    # if TipoProducto.objects.filter(id=categoriaId).exists():
-                    #     messages.error(request, f"El tipo Producto con ID {categoriaId} ya existe en la base de datos.")
-                    #     return redirect('getApi')
-                    # else:
                     TipoProducto.objects.create(
                             nombre = item['nombre']
                             )                    
