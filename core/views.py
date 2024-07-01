@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 import requests
 from .forms import RegistrationForm
-from .models import Producto,Pedido,Entrega,EstadoEntrega,Contact,Marca,TipoProducto
+from .models import EstadoPedido, Producto,Pedido,Entrega,EstadoEntrega,Contact,Marca,TipoProducto,DetallePedido
 from django.contrib.auth.decorators import login_required
 from .cart import Cart
 import json
@@ -74,7 +74,7 @@ def stock_products(request):
 def pedidos(request):
     pedidos = Pedido.objects.all()
     estados_pedidos = []
-
+ #Agregar al html botones para aprobar o rechazar pedidos. 
     for pedido in pedidos:
         # Acceder al nombre del estado del pedido para cada pedido
         estado_pedido = pedido.estado.estado
@@ -122,6 +122,7 @@ def cart(request):
     productoCart = cart.get_prodss()
     total = cart.cart_total()
     cantidad = cart.get_quants 
+    userId = request.user
     ##clave produccion de usuario de prueba TESTUSER1085505293 pass : Hb9QJvAszT || revisar cuenta mercado pago siempre si tiene saldo
     sdk = mercadopago.SDK("APP_USR-170340208437871-051617-b45127860d141be852b0d15af556090e-1817032202")
     items = []
@@ -141,7 +142,7 @@ def cart(request):
             "quantity": quantity,
             "unit_price": unit_price,
         })
-    
+        #Crear objeto de pedido en el for de items con estado pendiente, Agregar formulario de fecha a la tabla entrega y html (Crear formulario y dejar como defecto el estado de entrega por confirmar (?) )
     preference_data = {
         "back_urls": {
             "success": "http://127.0.0.1:8000/success_pay/",
@@ -153,6 +154,16 @@ def cart(request):
     preference = preference_response["response"]
     print(items)
     print(cantidad)
+    for item in items:
+        pedidoObj = Pedido(
+            User=userId,
+            nombre=item["title"],
+            estado=EstadoPedido.objects.get(id=1),
+            cantidad_producto=item["quantity"],
+            precio_producto=item["unit_price"]
+        )
+        pedidoObj.save()
+
     return render(request,'cart.html',{'productos':cart_products,'preference':preference,'items':cantidad,'total':total})
 
 
@@ -391,7 +402,8 @@ def obtener_datos_api(request):
                         imagen_url = item['imagen_url'],
                         marca = marcaObj,
                         tipo_producto = tipoProdObj)
-                                    
+            messages.success(request, 'Productos añadidos correctamente')
+            messages.get_messages(request).used = True                            
         elif 'FormMarca' in request.POST:
             url = 'https://localhost:7249/api/Marcas' 
             headers = {'accept': '*/*'}
@@ -404,6 +416,8 @@ def obtener_datos_api(request):
                     Marca.objects.create(
                             nombre = item['nombre']
                             )
+            messages.success(request, 'Marcas añadidas correctamente')
+            messages.get_messages(request).used = True          
         elif 'FormTipoProducto' in request.POST:
            url = 'https://localhost:7249/api/TipoProducto'
            headers = {'accept': '*/*'}
@@ -415,7 +429,44 @@ def obtener_datos_api(request):
                 for item in datos:
                     TipoProducto.objects.create(
                             nombre = item['nombre']
-                            )                    
+                            )
+                messages.success(request, 'Categorias añadidas correctamente')
+                messages.get_messages(request).used = True                              
     else:
         datos = ''    
     return render(request, 'getApi.html')    
+
+def registrar_entrega(request):
+    pedidos = Pedido.objects.all()
+    estados = EstadoEntrega.objects.all()
+
+    if request.method == 'POST':
+        fecha = request.POST.get('fecha_entrega')
+        pedido_id = request.POST.get('pedido')
+        estado_entrega_id = request.POST.get('estado_entrega')
+
+        pedido = get_object_or_404(Pedido, id=pedido_id)
+        estado_entrega = get_object_or_404(EstadoEntrega, id=estado_entrega_id)
+
+        # Verificar si ya existe una entrega para este pedido
+        entrega_existente = Entrega.objects.filter(pedido=pedido).first()
+
+        if entrega_existente:
+            # Si ya existe una entrega, actualizarla en lugar de crear una nueva
+            entrega_existente.fecha_entrega = fecha
+            entrega_existente.estado_entrega = estado_entrega
+            entrega_existente.save()
+            messages.success(request, 'Entrega actualizada correctamente')
+        else:
+            # Si no existe una entrega, crear una nueva
+            entrega_obj = Entrega(
+                pedido=pedido,
+                fecha_entrega=fecha,
+                estado_entrega=estado_entrega
+            )
+            entrega_obj.save()
+            messages.success(request, 'Entrega registrada correctamente')
+
+        return redirect('index')
+
+    return render(request, 'registrarEntrega.html', {'pedidos': pedidos, 'estados': estados})

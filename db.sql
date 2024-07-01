@@ -66,6 +66,20 @@ insert into tipoProducto values (4,'Tornillos y Anclajes');
 insert into tipoProducto values (5,'Fijaciones y Adhesivos');
 insert into tipoProducto values (6,'Equipos de Medición');
 
+Insert into core_estadopedido (estado) values("Pendiente");
+Insert into core_estadopedido (estado) values("En revision");
+Insert into core_estadopedido (estado) values("Confirmado");
+Insert into core_estadopedido (estado) values("Rechazado");
+Insert into core_estadopedido (estado) values("En proceso ");
+Insert into core_estadopedido (estado) values("Enviado");
+Insert into core_estadopedido (estado) values("Cancelado");
+
+
+insert into core_estadoentrega (estado) values("En espera");
+insert into core_estadoentrega (estado) values("Confirmado");
+insert into core_estadoentrega (estado) values("Cancelado");
+
+
 -- ENTORNO 
 
 SECRET_KEY = django-insecure-6q1l^c%616qqhp7*668+ht7a4r(&91i0i7=kl-tw*1k95%htey
