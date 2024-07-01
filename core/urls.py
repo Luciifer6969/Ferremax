@@ -23,4 +23,5 @@ urlpatterns = [
     path('consultas_clientes',consulta_cliente,name='consultaCliente'),
     path('mis_consultas/<int:user_id>',mis_consultas,name='mis_consultas'),
     path('getApi/',obtener_datos_api,name='getApi'),
+    path('registrar_entrega/',registrar_entrega, name='registrarEntrega'),
 ]
