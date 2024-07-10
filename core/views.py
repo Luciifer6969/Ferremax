@@ -470,3 +470,35 @@ def registrar_entrega(request):
         return redirect('index')
 
     return render(request, 'registrarEntrega.html', {'pedidos': pedidos, 'estados': estados})
+
+#eliminar pedidos 
+def eliminar_pedido(request,pedido_id):
+    pedidoObj = get_object_or_404(Pedido, id=pedido_id)
+    estadoPRechazado = EstadoPedido.objects.get(id=4)
+
+    if not pedidoObj:
+        messages.error(request,'No existen pedidos registrados') 
+        messages.get_messages(request).used = True   
+    else:
+        pedidoObj.estado = estadoPRechazado
+        pedidoObj.save()
+        messages.success(request,'Se rechazo el pedido correctamente!') 
+        messages.get_messages(request).used = True 
+        redirect('pedidos')    
+    return render(request,'pedido_eliminado.html')    
+
+#aceptar pedido 
+def aceptar_pedido(request,pedido_id):
+    pedidoObj = get_object_or_404(Pedido, id=pedido_id)
+    estadoPAprobado = EstadoPedido.objects.get(id=3)
+
+    if not pedidoObj:
+        messages.error(request,'No existen pedidos registrados') 
+        messages.get_messages(request).used = True   
+    else:
+        pedidoObj.estado = estadoPAprobado
+        pedidoObj.save()
+        messages.success(request,'Se Aprobó el pedido correctamente!') 
+        messages.get_messages(request).used = True 
+        redirect('pedidos')    
+    return render(request,'pedido_aceptado.html')    

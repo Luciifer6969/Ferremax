@@ -38,8 +38,8 @@
         <td>{{ pedido.estado.estado}}</td> 
         <td>{{ pedido.cantidad_producto}}</td>
         <td>{{ pedido.nombre }}</td>
-        <td class="col-sm-1"><a class="btn btn-primary shadow" href="#" role="button">Aprobar</a>
-        <td class="col-sm-1"><a class="btn btn-danger shadow" href="#" role="button">Rechazar</a>
+        <td class="col-sm-1"><a class="btn btn-primary shadow" href="{% url 'aceptar_pedido' pedido.id %}" role="button">Aprobar</a>
+        <td class="col-sm-1"><a class="btn btn-danger shadow" href="{% url 'eliminar_pedido' pedido.id %}" role="button">Rechazar</a>
        </tr>
     {% endfor %}
     </tbody>
