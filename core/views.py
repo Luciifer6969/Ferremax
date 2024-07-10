@@ -211,7 +211,7 @@ def edit_entrega(request,id_entrega):
         pkEstado = EstadoEntrega.objects.get(id=estado_id)
         entregaObj.estado_entrega = pkEstado
         entregaObj.save()
-        messages.success(request, 'Entrega registrada correctamente', extra_tags='success')
+        messages.success(request, 'Entrega registrada correctamente')
         messages.get_messages(request).used = True
         return redirect('entrega')
     else:
@@ -467,7 +467,7 @@ def registrar_entrega(request):
             entrega_obj.save()
             messages.success(request, 'Entrega registrada correctamente')
 
-        return redirect('index')
+        return redirect('entrega')
 
     return render(request, 'registrarEntrega.html', {'pedidos': pedidos, 'estados': estados})
 
