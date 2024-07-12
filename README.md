@@ -50,7 +50,8 @@ Registrar la entrega de productos a clientes.
 
 Instalar dependencias 
 pip install mysqlclient
-
+pip install python-dotenv
+pip install mercadopago
 
 
 
