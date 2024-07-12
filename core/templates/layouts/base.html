@@ -54,11 +54,6 @@
                   {% endif %}
                   {% if perms.core.view_pedido %}
                   <li class="nav-item">
-                    <a class="nav-link link-opt" aria-current="page" href="{% url 'pedidos' %}">Estado de Pedidos</a>
-                  </li>
-                  {% endif %}
-                  {% if perms.core.view_pedido %}
-                  <li class="nav-item">
                     <a class="nav-link link-opt" aria-current="page" href="{% url 'getApi' %}">Agregar productos</a>
                   </li>
                   {% endif %}
