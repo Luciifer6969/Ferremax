@@ -88,9 +88,7 @@ def pedidos(request):
 def solicitud_bodega(request):
     return render(request,'solicitud_bodega.html')
 
-# views.py
-from django.shortcuts import render
-from .models import Producto, TipoProducto
+
 
 def productos(request):
     tipo_producto_id = request.GET.get('tipo_producto')
@@ -502,3 +500,54 @@ def aceptar_pedido(request,pedido_id):
         messages.get_messages(request).used = True 
         redirect('pedidos')    
     return render(request,'pedido_aceptado.html')    
+
+def add_product(request):
+    tipoProducto = TipoProducto.objects.all()
+    marca = Marca.objects.all()
+
+    if request.method == 'POST':
+        nombreP = request.POST.get('nombreProducto') 
+        descripcionP = request.POST.get('descripcionProducto') 
+        precioP = request.POST.get('precio') 
+        cantidadP = request.POST.get('cantidad')  
+        imagenP = request.POST.get('imagenP')  
+        marcaP = request.POST.get('marcaP')  
+        tipoproductoP = request.POST.get('categoriaP')  
+
+
+        marcaObj = get_object_or_404(Marca, id=marcaP)
+        categoria = get_object_or_404(TipoProducto, id=tipoproductoP)
+        productoObj = Producto.objects.create(
+            nombre = nombreP,
+            descripcion = descripcionP,
+            precio = precioP,
+            cantidad_disponible = cantidadP,
+            imagen_url = imagenP,
+            marca = marcaObj,
+            tipo_producto = categoria 
+        )
+        messages.success(request, 'Producto añadido correctamente!')
+        messages.get_messages(request).used = True  
+
+    return render(request, 'add_producto.html',{'marca':marca,'categoria':tipoProducto})
+
+
+def delete_product(request):
+    producto = Producto.objects.all()
+    
+    return render(request,'delete_producto.html',{'producto':producto})
+
+def borrar_producto(request,producto_id):
+    productoObj = get_object_or_404(Producto,id=producto_id)
+    producto = Producto.objects.all()
+
+    if not productoObj:
+        messages.error(request,'No existen el producto registrado') 
+        messages.get_messages(request).used = True   
+    else:
+        productoObj.delete()
+        messages.success(request,'Se elimino el producto correctamente!') 
+        messages.get_messages(request).used = True 
+        redirect('eliminar_producto')  
+
+    return render(request,'delete_producto.html',{'producto':producto})
