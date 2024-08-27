@@ -26,4 +26,7 @@ urlpatterns = [
     path('mis_consultas/<int:user_id>',mis_consultas,name='mis_consultas'),
     path('getApi/',obtener_datos_api,name='getApi'),
     path('registrar_entrega/',registrar_entrega, name='registrarEntrega'),
+    path('agregar_producto/',add_product, name='agregar_producto'),
+    path('eliminar_producto/',delete_product, name='eliminar_producto'),
+    path('eliminar_producto/<int:producto_id>',borrar_producto,name='borrar_producto'),
 ]
