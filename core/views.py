@@ -11,7 +11,7 @@ from .cart import Cart
 import json
 import http.client
 import mercadopago
-
+from django.db.models import Q
 
 
 def index(request):
@@ -551,3 +551,33 @@ def borrar_producto(request,producto_id):
         redirect('eliminar_producto')  
 
     return render(request,'delete_producto.html',{'producto':producto})
+
+def borrar_multiples_productos(request):
+    if request.method == "POST":
+        productos_seleccionados = request.POST.getlist('productos')  # Obtener lista de productos seleccionados
+        if productos_seleccionados:
+            Producto.objects.filter(id__in=productos_seleccionados).delete()
+            messages.success(request, "Productos eliminados con éxito.")
+            messages.get_messages(request).used = True   
+        else:
+            messages.error(request, "No se seleccionó ningún producto para eliminar.")
+            messages.get_messages(request).used = True   
+    return redirect('eliminar_producto')
+
+def buscar_productos(request):
+    query = request.GET.get('nombre')
+
+    if query:
+        productos = Producto.objects.filter(
+            Q(nombre__icontains=query) |
+            Q(marca__nombre__icontains=query) |
+            Q(tipo_producto__nombre__icontains=query)
+        )
+    else:
+        productos = None
+
+    context = {
+        'productos': productos,
+        'query': query,
+    }
+    return render(request, 'search.html', context)

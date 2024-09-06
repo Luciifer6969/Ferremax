@@ -72,6 +72,10 @@
                   </li>
                   {% endif %}
                 </ul>
+                <form class="d-flex" method="get" action="{% url 'busqueda' %}">
+                  <input class="form-control me-2" type="search" placeholder="Buscar productos" aria-label="Search" name="nombre" value="{{ request.GET.nombre }}">
+                  <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                </form>
                 <ul class="navbar-nav me-0 mb-2 mb-lg-0">
                   {% if request.user.is_authenticated %}
                   <li class="nav-item">                   
