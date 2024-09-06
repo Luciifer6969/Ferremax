@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../static/css/common.css">
     <script defer src="../../static/js/common.js"></script>
     <script src="https://kit.fontawesome.com/886627400f.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Ferremax</title>
 </head>
 <body>
@@ -72,7 +73,7 @@
                   </li>
                   {% endif %}
                 </ul>
-                <form class="d-flex" method="get" action="{% url 'busqueda' %}">
+                <form class="d-flex" method="get" action="{% url 'busqueda' %}" autocomplete="off">
                   <input class="form-control me-2" type="search" placeholder="Buscar productos" aria-label="Search" name="nombre" value="{{ request.GET.nombre }}">
                   <button class="btn btn-outline-secondary" type="submit">Buscar</button>
                 </form>

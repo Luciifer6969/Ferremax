@@ -222,3 +222,51 @@ function deleteProductCart(productoId) {
     }
   });
 };
+
+function confirmDelete(productoId) {
+  Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          window.location.href = "/eliminar_producto/"+productoId;
+      }
+  });
+}
+
+function confirmDeleteMultiple() {
+  Swal.fire({
+      title: '¿Eliminar productos seleccionados?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          document.forms[0].submit();  // Enviar el formulario
+      }
+  });
+}
+
+function confirmCategoria() {
+  Swal.fire({
+      title: '¿Eliminar categoria seleccionada?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          document.forms[2].submit();  // Enviar el formulario
+      }
+  });
+}

@@ -15,7 +15,22 @@
 {% endfor %}
 {%endif%}
 <br>
-<form method="post" action="{% url 'borrar_multiples_productos' %}">
+<div class="d-flex justify-content-center">
+<form action="{% url 'eliminar_categorias' %}" method="POST">
+  {% csrf_token %}
+  <div class="form-floating me-2">
+    <select class="form-select" aria-label="Default select example" name="categorias" id="categoria_id">
+      <option selected disabled>Eliminar por categoria</option>
+      {% for x in tipoproducto %}
+        <option value="{{ x.id }}">{{ x.nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button class="btn btn-danger shadow" type="submit" onclick="confirmCategoria()" >Eliminar categoria</button>
+</form>
+</div>
+<br>
+<form method="POST" action="{% url 'borrar_multiples_productos' %}" autocomplete="off">
   {% csrf_token %}
 <table class="table table-striped table-hover shadow-lg mb-5 text-center">
     <thead>
@@ -36,12 +51,11 @@
         <td>{{ x.nombre }}</td>
         <td>{{ x.descripcion }}</td> 
         <td><img src="{{ x.imagen_url }}" class="card-img-top" alt="foto"></td>
-        <td class="col-sm-1"><a class="btn btn-danger shadow" href="{% url 'borrar_producto' x.id %}" role="button">Eliminar</a>
+        <td class="col-sm-1"><a class="btn btn-danger shadow" href="#" onclick="confirmDelete('{{ x.id }}')" role="button">Eliminar</a>
        </tr>
     {% endfor %}
     </tbody>
   </table>
-
-  <button type="submit" class="btn btn-danger">Eliminar Seleccionados</button>
+  <button type="submit" class="btn btn-danger" onclick="confirmDeleteMultiple()">Eliminar Seleccionados</button>
 </form>
 {% endblock%} 
