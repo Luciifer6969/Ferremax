@@ -29,4 +29,6 @@ urlpatterns = [
     path('agregar_producto/',add_product, name='agregar_producto'),
     path('eliminar_producto/',delete_product, name='eliminar_producto'),
     path('eliminar_producto/<int:producto_id>',borrar_producto,name='borrar_producto'),
+    path('eliminar_multiples_productos/', borrar_multiples_productos,name='borrar_multiples_productos'),
+    path('buscar/',buscar_productos,name='busqueda')
 ]
