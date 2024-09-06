@@ -534,8 +534,9 @@ def add_product(request):
 
 def delete_product(request):
     producto = Producto.objects.all()
-    
-    return render(request,'delete_producto.html',{'producto':producto})
+    tipoproducto = TipoProducto.objects.all()
+
+    return render(request,'delete_producto.html',{'producto':producto,'tipoproducto':tipoproducto})
 
 def borrar_producto(request,producto_id):
     productoObj = get_object_or_404(Producto,id=producto_id)
@@ -581,3 +582,16 @@ def buscar_productos(request):
         'query': query,
     }
     return render(request, 'search.html', context)
+
+def eliminar_categorias(request):
+    if request.method == "POST":
+        categorias = request.POST.get('categorias')
+        TipoProducto.objects.filter(id__in=categorias).delete()
+        messages.success(request, "Categoria eliminada con éxito.")
+        messages.get_messages(request).used = True 
+        return redirect('eliminar_producto')  
+    else:
+         messages.error(request, "No se seleccionó ningúna categoria para eliminar.")
+         messages.get_messages(request).used = True     
+
+    return redirect('eliminar_producto')
