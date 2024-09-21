@@ -604,3 +604,54 @@ def eliminar_categorias(request):
          messages.get_messages(request).used = True     
 
     return redirect('eliminar_producto')
+
+def actualizar_producto(request):
+    productosObj = Producto.objects.all()
+
+    context = {
+        'producto': productosObj
+    }
+    return render(request,'update_producto.html', context)
+
+def edit_producto(request,id_producto):
+    productoObj = get_object_or_404(Producto, id=id_producto)
+    marcaObj = Marca.objects.all()
+    categoriaObj = TipoProducto.objects.all()
+
+    context = {
+        'producto': productoObj,
+        'marca':marcaObj ,
+        'categoria':categoriaObj
+    }
+
+
+    if request.method == 'POST':
+        nombreProducto = request.POST['nombreProducto']
+        descripcionProducto = request.POST['descripcionProducto']
+        precioProducto = request.POST['precio']
+        cantidadProducto = request.POST['cantidad']
+        imagenProducto = request.POST['imagenP']
+        marcaID = request.POST['marcaP']
+        categoriaID = request.POST['categoriaP']
+
+        try:
+            marcaObj = Marca.objects.get(id=marcaID)
+            categoriaObj = TipoProducto.objects.get(id=categoriaID)
+        except (Marca.DoesNotExist, TipoProducto.DoesNotExist):
+            messages.error(request, "Marca o categoría no válida.")
+            return redirect('edit_producto', id_producto=id_producto)
+        
+        productoObj.nombre = nombreProducto
+        productoObj.descripcion = descripcionProducto
+        productoObj.precio = precioProducto
+        productoObj.cantidad_disponible = cantidadProducto
+        productoObj.imagen_url = imagenProducto
+        productoObj.marca = marcaObj  
+        productoObj.tipo_producto = categoriaObj  
+
+        productoObj.save()
+
+        messages.success(request, 'Producto actualizado correctamente.')
+        return redirect('edit_producto',id_producto=id_producto) 
+
+    return render(request,'editar_producto.html',context)

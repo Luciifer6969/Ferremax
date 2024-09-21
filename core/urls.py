@@ -31,5 +31,7 @@ urlpatterns = [
     path('eliminar_producto/<int:producto_id>',borrar_producto,name='borrar_producto'),
     path('eliminar_multiples_productos/', borrar_multiples_productos,name='borrar_multiples_productos'),
     path('buscar/',buscar_productos,name='busqueda'),
-    path('eliminar_categorias',eliminar_categorias,name='eliminar_categorias')
+    path('eliminar_categorias',eliminar_categorias,name='eliminar_categorias'),
+    path('actualizar_producto/',actualizar_producto,name='actualizar_producto'),
+    path('editar_producto/<int:id_producto>/',edit_producto,name='edit_producto')
 ]
