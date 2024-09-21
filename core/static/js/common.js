@@ -270,3 +270,36 @@ function confirmCategoria() {
       }
   });
 }
+
+
+$("#precioId").on("input", () => {
+  const precio = $("#precioId").val();
+  const parrafo = $("#pPrecioId");
+
+  if (precio < 0 ) {
+    $("#precioId").addClass("is-invalid");
+    $("#precioId").removeClass("is-valid");
+    parrafo.text("El valor no puede ser menor a 0");
+    parrafo.css({ color: "red", fontSize: "14px" });
+  } else {
+    $("#emailId").removeClass("is-invalid");
+    $("#emailId").addClass("is-valid");
+    parrafo.text("");
+  }
+});
+
+$("#cantidadId").on("input", () => {
+  const cantidad = $("#cantidadId").val();
+  const parrafo = $("#pCantidadId");
+
+  if (cantidad < 0 ) {
+    $("#cantidadId").addClass("is-invalid");
+    $("#cantidadId").removeClass("is-valid");
+    parrafo.text("El valor no puede ser menor a 0");
+    parrafo.css({ color: "red", fontSize: "14px" });
+  } else {
+    $("#cantidadId").removeClass("is-invalid");
+    $("#cantidadId").addClass("is-valid");
+    parrafo.text("");
+  }
+});
