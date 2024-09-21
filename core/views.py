@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth import authenticate,login,logout
@@ -102,9 +103,18 @@ def productos(request):
         except ValueError:
             pass  # Si no es un entero, no hace nada adicional
     
+    # Si hay una categoría seleccionada, usa esa, si no, usa todos los productos
+    productos_a_mostrar = productos if categoria is None else categoria
+
+    # Paginación: Número de productos por página (por ejemplo, 9)
+    paginator = Paginator(productos_a_mostrar, 6)
+    page_number = request.GET.get('page')  # Número de página actual desde la URL
+    page_obj = paginator.get_page(page_number)
+
     tipos_producto = TipoProducto.objects.all()
+    
     context = {
-        'productos': productos if categoria is None else categoria,
+        'page_obj': page_obj,  # Página con los productos paginados
         'tipos_producto': tipos_producto,
         'categoria_actual': tipo_producto_id if categoria else None,
     }
@@ -130,7 +140,7 @@ def cart(request):
 
         try:
             quantity = details['quantity']
-            unit_price = float(details['precio'])
+            unit_price = int(float(details['precio'])*1000)
         except (ValueError, TypeError) as e:
             print(f"Error en conversión de cantidad o precio: {e}")
             continue 
@@ -149,9 +159,8 @@ def cart(request):
     }
     
     preference_response = sdk.preference().create(preference_data)
-    preference = preference_response["response"]
-    print(items)
-    print(cantidad)
+    preference = preference_response["response"]    
+    #Creacion de objeto para estado pedido 
     for item in items:
         pedidoObj = Pedido(
             User=userId,

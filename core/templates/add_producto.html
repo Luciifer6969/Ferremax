@@ -32,16 +32,18 @@
             <input type="text" class="form-control" id="descripcion" name="descripcionProducto" required placeholder="Descripcion del producto"/>
             <label for="descripcionProducto" class="form-label mx-2">Descripcion del producto</label>
         </div>
+        <span id="pPrecioId"></span>
         <div class="form-floating">
-            <input type="number" class="form-control" id="precio" name="precio" required placeholder="Precio del producto"/>
+            <input type="number" class="form-control" id="precioId" name="precio" required placeholder="Precio del producto" min="0"/>
             <label for="precio" class="form-label mx-2">Precio del producto</label>
         </div>
+        <span id="pCantidadId"></span>
         <div class="form-floating">
-            <input type="number" class="form-control" id="cantidad" name="cantidad" required placeholder="Cantidad del producto"/>
+            <input type="number" class="form-control" id="cantidadId" name="cantidad" required placeholder="Cantidad del producto" min="0"/>
             <label for="cantidad" class="form-label mx-2">Cantidad a ingresar</label>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control" id="imagenP" name="imagenP" required placeholder="Imagen del producto"/>
+            <input type="text" class="form-control" id="imagenP" name="imagenP" placeholder="Imagen del producto"/>
             <label for="imagenP" class="form-label mx-2">Imagen del producto (URL)</label>
         </div>
         <div class="form-floating">
