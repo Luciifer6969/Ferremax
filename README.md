@@ -52,6 +52,8 @@ Instalar dependencias
 pip install mysqlclient
 pip install python-dotenv
 pip install mercadopago
-
+pip install xhtml2pdf
+pip install pandas
+pip install plotly 
 
 

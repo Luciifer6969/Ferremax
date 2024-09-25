@@ -60,3 +60,12 @@ class Contact(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     comentario = models.CharField(max_length=100)
     respuesta = models.CharField(max_length=100,null=True, blank=True)
+
+class HistorialPrecios(models.Model):
+    producto = models.ForeignKey(Producto, related_name='precios', on_delete=models.CASCADE)
+    fecha = models.DateTimeField(auto_now_add=True)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.fecha} - {self.precio}"
+    

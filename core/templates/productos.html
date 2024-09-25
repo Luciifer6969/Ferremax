@@ -37,6 +37,10 @@
                                 {% else %}
                                 <a href="{% url 'auth_login' %}"><button type="button" class="btn btn-primary agregar-carrito" value="{{ producto.id }}">Agregar al carrito</button></a>
                                 {% endif %}
+                                <br>
+                                {% if perms.core.view_pedido %}
+                                <a href="{% url 'historialPrecios' producto.id %}"><button class="btn btn-danger">Ver historial de precios</button></a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

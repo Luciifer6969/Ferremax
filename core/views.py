@@ -1,19 +1,22 @@
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 import requests
 from .forms import RegistrationForm
-from .models import EstadoPedido, Producto,Pedido,Entrega,EstadoEntrega,Contact,Marca,TipoProducto,DetallePedido
+from .models import EstadoPedido, Producto,Pedido,Entrega,EstadoEntrega,Contact,Marca,TipoProducto,DetallePedido,HistorialPrecios
 from django.contrib.auth.decorators import login_required
 from .cart import Cart
 import json
 import http.client
 import mercadopago
 from django.db.models import Q
-
+import pandas as pd
+import plotly.graph_objects as go
+from xhtml2pdf import pisa
+from django.template.loader import get_template
 
 def index(request):
     return render(request, 'index.html')
@@ -651,7 +654,84 @@ def edit_producto(request,id_producto):
 
         productoObj.save()
 
+        #Guardar historial de precio 
+        HistorialPrecios.objects.create(
+            producto=productoObj,
+            precio = precioProducto
+        )
+
+
         messages.success(request, 'Producto actualizado correctamente.')
         return redirect('edit_producto',id_producto=id_producto) 
 
     return render(request,'editar_producto.html',context)
+
+def historialPrecios(request,id_producto):
+    ProductoObj = get_object_or_404(Producto,id=id_producto)
+    data = {
+        'Producto':[],
+        'Precio':[],
+        'Fecha':[]
+    }
+
+    for i in ProductoObj.precios.all():
+        data['Producto'].append(ProductoObj.nombre)
+        data['Precio'].append(i.precio)
+        data['Fecha'].append(i.fecha)
+    
+    df = pd.DataFrame(data)
+
+    df['Fecha'] = pd.to_datetime(df['Fecha'])
+    
+    # Ordenar los datos por fecha
+    df.sort_values('Fecha', inplace=True)
+    
+    # Gráfico de historial de precios utilizando Plotly
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df['Fecha'], y=df['Precio'],
+                             mode='lines+markers',
+                             name=ProductoObj.nombre,
+                             line=dict(color='blue', width=2),
+                             marker=dict(size=8)))
+    
+    fig.update_layout(title=f'Historial de Precios para {ProductoObj.nombre}',
+                      xaxis_title='Fecha',
+                      yaxis_title='Precio',
+                      hovermode='x unified')
+    
+    # Convertir el gráfico a HTML
+    graph_html = fig.to_html(full_html=False)
+
+    return render(request,'historialPrecios.html',{'grafico':graph_html,'Producto':ProductoObj})
+
+def exportarPdf(request, id_producto):
+    ProductoObj = get_object_or_404(Producto, id=id_producto)
+    precios = ProductoObj.precios.all()
+
+    # Crear una lista con los datos de precio y fecha
+    data = {
+        'Producto': ProductoObj.nombre,
+        'Precios': [(p.fecha, p.precio) for p in precios]
+    }
+
+    template_path = 'historialPrecios_pdfTemplate.html'  
+    context = {'Producto': ProductoObj, 'Precios': data}
+
+    # Configurar la respuesta del PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="informe_{ProductoObj.nombre}.pdf"'
+
+    # Renderizar el template
+    template = get_template(template_path)
+    html = template.render(context)
+    
+    # Generar el PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    # Verificar si hay errores en la generación
+    if pisa_status.err:
+        return HttpResponse(f'Error al generar PDF: {pisa_status.err}', status=400)
+
+    return response
+
+

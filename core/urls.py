@@ -33,5 +33,7 @@ urlpatterns = [
     path('buscar/',buscar_productos,name='busqueda'),
     path('eliminar_categorias',eliminar_categorias,name='eliminar_categorias'),
     path('actualizar_producto/',actualizar_producto,name='actualizar_producto'),
-    path('editar_producto/<int:id_producto>/',edit_producto,name='edit_producto')
+    path('editar_producto/<int:id_producto>/',edit_producto,name='edit_producto'),
+    path('historialPrecios/<int:id_producto>/',historialPrecios,name='historialPrecios'),
+    path('historialPrecios/<int:id_producto>/exportarPdf/',exportarPdf,name='exportarPdf')
 ]
