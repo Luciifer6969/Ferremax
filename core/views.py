@@ -143,7 +143,7 @@ def cart(request):
 
         try:
             quantity = details['quantity']
-            unit_price = int(float(details['precio'])*1000)
+            unit_price = float(details['precio'])*1000
         except (ValueError, TypeError) as e:
             print(f"Error en conversión de cantidad o precio: {e}")
             continue 

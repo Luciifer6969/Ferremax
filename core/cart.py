@@ -74,7 +74,7 @@ class Cart():
             key = int(key)
             for product in products:
                 if product.id == key:
-                    total = total + (float(product.precio) * value)
+                    total = total + ((product.precio) * value)
         return total 
 
     def get_quants(self):
