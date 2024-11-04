@@ -55,5 +55,6 @@ pip install mercadopago
 pip install xhtml2pdf
 pip install pandas
 pip install plotly 
-
+pip install behave
+pip install selenium
 
