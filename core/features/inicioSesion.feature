@@ -45,5 +45,17 @@ Feature: Inicio sesión
   And ingresa la contraseña correcta "contrasena1"
   Then el usuario no puede iniciar sesión y se ve una alerta notificando formato de correo no válido, incluye un @ en la dirección de correo electrónico
 
-  Scenario:
+  Scenario: Ingreso de email con formato incorrecto 
+  Given que un usuario ingresó a la página FerreMax
+  When accede a la opción de ingresar
+  And completa el campo de correo con un mail registrado sin agregar .com "clientegmail"
+  And ingresa la contraseña correcta "contrasena1"
+  Then el usuario no puede iniciar sesión y se ve una alerta notificando formato de correo no válido
   
+  Scenario: Inicio de sesión con usuario correcto sin ingresar contraseña
+  Given  que un usuario ingresó a la página FerreMax
+  When accede a la opción de ingresar
+  And ingresa una dirección de "cliente@gmail.com" registrado previamente
+  And no completa el campo de contraseña
+  And presiona el botón ingresar
+  Then el usuario no puede iniciar sesión y el sistema indica rellenar el campo Contraseña
