@@ -123,7 +123,7 @@ def login_invalido(context):
 #Escenario Redirección del botón 'Cancelar' Fin
 
 
-#Escenarios Ingreso de email con formato incorrecto Inicio
+#Escenarios Ingreso de email con formato incorrecto sin @ Inicio
 
 @when(u'completa el campo de correo con un mail registrado sin agregar @ "{correo}"')
 def correo_sin_arroba(context,correo):
@@ -135,4 +135,33 @@ def alert_login(context):
     context.driver.find_element(By.XPATH, '//*[@type="submit"][text()="Ingresar"]')
     assert context.driver.current_url == current_url, "El formulario no fue enviado debido a un error de validación"
 
-#Escenarios Ingreso de email con formato incorrecto Fin
+#Escenarios Ingreso de email con formato incorrecto sin @ Fin
+
+#Escenarios Ingreso de email con formato incorrecto sin dominio .com Inicio
+@when(u'completa el campo de correo con un mail registrado sin agregar .com "{correo}"')
+def correo_sindominio(context,correo):
+    ingresar_correo(context,correo)
+
+@then(u'el usuario no puede iniciar sesión y se ve una alerta notificando formato de correo no válido')
+def alert_login(context):
+    current_url = context.driver.current_url
+    context.driver.find_element(By.XPATH, '//*[@type="submit"][text()="Ingresar"]')
+    assert context.driver.current_url == current_url, "El formulario no fue enviado debido a un error de validación"
+#Escenarios Ingreso de email con formato incorrecto sin dominio .com  Fin
+
+#Escenarios Inicio de sesión con usuario correcto sin ingresar contraseña  Inicio
+@when(u'no completa el campo de contraseña')
+def empty_field(context):
+    pswInput = context.driver.find_element(By.XPATH, '//*[@name="password"]')
+    if pswInput.get_attribute("value") == "":
+        assert True, "El campo de contraseña está vacío"
+    else:
+        assert False, "El campo de contraseña tiene datos"
+
+@then(u'el usuario no puede iniciar sesión y el sistema indica rellenar el campo Contraseña')
+def alert_login(context):
+    current_url = context.driver.current_url
+    context.driver.find_element(By.XPATH, '//*[@type="submit"][text()="Ingresar"]')
+    assert context.driver.current_url == current_url, "El formulario no fue enviado debido a un error de validación"
+#Escenarios Inicio de sesión con usuario correcto sin ingresar contraseña  Fin
+
