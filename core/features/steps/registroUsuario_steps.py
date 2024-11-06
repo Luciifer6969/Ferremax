@@ -2,7 +2,6 @@ from behave import given, when, then
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from inicioSesion_steps import abrir_explorador
 
 # Escenario Registro de usuario exitoso Inicio
 
