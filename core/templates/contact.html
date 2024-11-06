@@ -30,7 +30,7 @@
             <label for="motivo" class="form-label mx-2">Motivo de contacto</label>
         </div>
         <div class="form-floating">
-        <select class="form-select" aria-label="Default select example" name="productoId" id="producto_id">
+        <select class="form-select" aria-label="Default select example" name="productoId" id="producto_id" required>
             <option selected disabled>Seleccion un producto</option>
                 {% for x in producto %}
                     <option value="{{ x.id }}">{{ x.nombre }}</option>

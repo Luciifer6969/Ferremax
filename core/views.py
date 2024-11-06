@@ -278,12 +278,21 @@ def contact(request):
     producto = Producto.objects.all()
 
     if request.method == 'POST':
-        motivo = request.POST['motivo']
-        productoId = request.POST['productoId']
-        comment = request.POST['comment']
+        motivo = request.POST.get('motivo', '').strip()
+        productoId = request.POST.get('productoId', '').strip()
+        comment = request.POST.get('comment', '').strip()
 
-        #obtener producto de id 
-        productObj = Producto.objects.get(id=productoId) 
+        # Validar que el producto haya sido seleccionado
+        if not productoId or productoId == "Selecciona un producto":
+            messages.error(request, 'Por favor, selecciona un producto antes de enviar el formulario.')
+            return render(request, 'contact.html', {'producto': producto})
+
+        try:
+            # obtener el producto de id
+            productObj = Producto.objects.get(id=productoId) 
+        except Producto.DoesNotExist:
+            messages.error(request, 'Producto seleccionado no es válido.')
+            return render(request, 'contact.html', {'producto': producto})
 
         contact = Contact(
             motivo=motivo,
