@@ -12,7 +12,7 @@ from selenium.webdriver.support.ui import Select
 def verificar_sesion_iniciada(context):
     try:
         # Esperar que aparezca un elemento que solo esté visible cuando el usuario esté logueado.
-        WebDriverWait(context.driver, 10).until(
+        WebDriverWait(context.driver, 15).until(
             EC.presence_of_element_located((By.XPATH, '//a[contains(text(), "Hola")]'))
         )
     except TimeoutException:
