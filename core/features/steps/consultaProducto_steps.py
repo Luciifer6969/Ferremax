@@ -38,7 +38,7 @@ def opcionMotivo(context,motivo):
     )
     motivo_input.send_keys(motivo)
 
-@when(u'selecciona un producto del inventario "{producto}"')
+@when(u'selecciona un producto de la lista "{producto}"')
 def selecciona_producto(context, producto):
     select_element = WebDriverWait(context.driver, 10).until(
         EC.presence_of_element_located((By.NAME, "productoId"))
@@ -70,3 +70,55 @@ def step_consultaExitosa(context):
         "Registro añadido correctamente"
 
 #Escenario Consulta de producto exitosa Fin
+
+#Escenario Consulta de producto erróneo sin selección de producto  Inicio
+
+@when('no selecciona un producto del inventario')
+def step_sinProducto(context):
+    select_element = WebDriverWait(context.driver, 10).until(
+        EC.presence_of_element_located((By.NAME, "productoId"))
+    )
+    select = Select(select_element)
+    select.select_by_visible_text("Seleccion un producto")
+
+@then('no se envía la consulta con éxito y se notifica al usuario que no se puede realizar la consulta')
+def step_consultaProductoInvalido(context):
+    error_message = WebDriverWait(context.driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, '//div[contains(@class, "alert alert-danger")]'))
+    )
+    assert "Por favor, selecciona un producto antes de enviar el formulario." in error_message.text, \
+        "Por favor, selecciona un producto antes de enviar el formulario."
+    
+#Escenario Consulta de producto erróneo sin selección de producto  Fin
+
+#Escenario Consulta de producto erróneo sin motivo de consulta Inicio 
+@when('deja vacía la casilla Motivo de consulta')
+def step_consultaSinMotivo(context):
+    motivoInput = WebDriverWait(context.driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//*[@name="motivo" and @type="text"]'))
+    )
+    motivoInput.clear()
+
+@then('no se envía la consulta con éxito y se notifica al usuario que no se puede realizar la consulta sin motivo')
+def step_consultaSinMotivo(context):
+    current_url = context.driver.current_url
+    context.driver.find_element(By.XPATH, '//*[@type="submit"][text()="Enviar comentario"]')
+    assert context.driver.current_url == current_url, "El formulario no fue enviado debido a un error de validación"
+
+#Escenario Consulta de producto erróneo sin motivo de consulta Fin
+
+#Escenario Consulta de producto erróneo sin comentario Inicio 
+@when('deja la casilla comentario vacía')
+def step_consultaSinMotivo(context):
+    comentarioInput = WebDriverWait(context.driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//*[@name="motivo" and @type="text"]'))
+    )
+    comentarioInput.clear()
+
+@then('el sistema muestra un mensaje señalando que la casilla comentario es obligatoria')
+def step_consultaSinComentario(context):
+    current_url = context.driver.current_url
+    context.driver.find_element(By.XPATH, '//*[@type="submit"][text()="Enviar comentario"]')
+    assert context.driver.current_url == current_url, "El formulario no fue enviado debido a un error de validación"
+
+#Escenario Consulta de producto erróneo sin comentario Fin
