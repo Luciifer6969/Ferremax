@@ -14,7 +14,6 @@ def ingresar_usuario(context):
     wait = WebDriverWait(context.driver, 15)
     menu = wait.until(EC.element_to_be_clickable((By.XPATH, '//a[contains(text(), "Usuarios") and contains(@class, "dropdown-toggle")]')))
     menu.click()
-    
     # Espera hasta que el enlace "Ingresar" esté visible y haz clic en él
     login_link = wait.until(EC.element_to_be_clickable((By.XPATH, '//a[contains(@href, "auth_login") and contains(@class, "dropdown-item")]')))
     login_link.click()
@@ -34,7 +33,6 @@ def ingresar_contrasena(context, password):
 def presionar_boton(context):
     submit_button = context.driver.find_element(By.XPATH, '//*[@type="submit" and contains(text(),"Ingresar")]')
     submit_button.click()
-
 
 @then(u'el usuario inicia sesión correctamente')
 def inicia_sesion(context):

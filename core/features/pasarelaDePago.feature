@@ -35,3 +35,14 @@ Feature: Pasarela de pago
     And no tiene los fondos necesarios para la compra
     And presiona pagar
     Then la compra no se realiza con éxito y se le notifica al usuario que no tiene los fondos suficientes
+
+    Scenario: Generar comprobante de pago
+    Given tiene productos agregados al carrito 
+    And ingresa al menú Carrito de compra
+    And selecciona una cantidad de producto
+    And presiona el botón Ir a pagar
+    When ingresa sus datos en la plataforma de pago "TESTUSER1596276845" "Hg1yAWPqXw"
+    And tiene los fondos necesarios para la compra
+    And procede a pagar  
+    And completa el pago
+    Then la página FerreMax genera y muestra el comprobante de compra

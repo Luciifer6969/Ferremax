@@ -535,22 +535,35 @@ def add_product(request):
         marcaP = request.POST.get('marcaP')  
         tipoproductoP = request.POST.get('categoriaP')  
 
+        # Validación específica para la categoría
+        if not tipoproductoP or tipoproductoP == "Selecciona una categoria":
+            messages.error(request, 'Error: Debe seleccionar una categoría válida para el producto.')
+            return render(request, 'add_producto.html', {'marca': marca, 'categoria': tipoProducto})
 
+        # Validación del resto de los campos
+        if not marcaP:
+            messages.error(request, 'Error: Debe seleccionar una marca válida para el producto.')
+            return render(request, 'add_producto.html', {'marca': marca, 'categoria': tipoProducto})
+
+        # Obtención de los objetos relacionados y creación del producto
         marcaObj = get_object_or_404(Marca, id=marcaP)
         categoria = get_object_or_404(TipoProducto, id=tipoproductoP)
+        
         productoObj = Producto.objects.create(
-            nombre = nombreP,
-            descripcion = descripcionP,
-            precio = precioP,
-            cantidad_disponible = cantidadP,
-            imagen_url = imagenP,
-            marca = marcaObj,
-            tipo_producto = categoria 
+            nombre=nombreP,
+            descripcion=descripcionP,
+            precio=precioP,
+            cantidad_disponible=cantidadP,
+            imagen_url=imagenP,
+            marca=marcaObj,
+            tipo_producto=categoria 
         )
+        
         messages.success(request, 'Producto añadido correctamente!')
         messages.get_messages(request).used = True  
+        return redirect('agregar_producto')
 
-    return render(request, 'add_producto.html',{'marca':marca,'categoria':tipoProducto})
+    return render(request, 'add_producto.html', {'marca': marca, 'categoria': tipoProducto})
 
 
 def delete_product(request):
