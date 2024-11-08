@@ -1,3 +1,4 @@
+import re
 from behave import given, when, then
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -102,3 +103,28 @@ def step_productoRemovidoDelCarro(context):
     except TimeoutException:
         raise AssertionError("Error: No se encontró el mensaje o indicador de carrito vacío en el tiempo de espera.")
 #Escenario Eliminar producto del carrito de compra Fin
+
+#Escenario Calcular el total de productos Inicio
+
+@given('tiene selecionada una cantidad de productos')
+def step_tieneCantidad(context):
+    step_seleccionaCantidad(context)
+    step_agregaCantidad(context)
+
+@then('el sistema calcula el valor total del carrito y muestra ese dato')
+def step_totalCarrito(context):
+    try:
+        # Espera a que el elemento con el total esté visible usando un XPath más específico
+        total_texto = WebDriverWait(context.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//h5[contains(., "Total:")]'))
+        )
+        
+        # Extrae el texto del total y verifica que contenga un número
+        total_valor = total_texto.text
+        match = re.search(r'\d+', total_valor)  # Busca cualquier número en el texto
+
+        assert match, f"Error: No se encontró un valor numérico en el total del carrito. Texto encontrado: '{total_valor}'"
+    except TimeoutException:
+        raise AssertionError("Error: No se encontró el elemento con el total del carrito en el tiempo de espera.")
+#Escenario Calcular el total de productos Fin
+

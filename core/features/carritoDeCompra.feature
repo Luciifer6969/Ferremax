@@ -27,3 +27,11 @@ Feature: Carrito de compra
     And ingresa al menú Carrito de compra
     And presiona el botón Eliminar producto
     Then el producto es eliminado del carrito  
+
+    Scenario: Calcular el total de productos
+    Given tiene productos agregados al carrito 
+    And ingresa al menú Carrito de compra
+    And tiene selecionada una cantidad de productos
+    Then el sistema calcula el valor total del carrito y muestra ese dato
+
+    
