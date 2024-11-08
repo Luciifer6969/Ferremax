@@ -164,3 +164,25 @@ def step_pagoSinExito(context):
 
 #Escenario Realizar compra con fondos insuficientes Fin 
 
+#Escenario Generar comprobante de pago Inicio 
+
+@then('la página FerreMax genera y muestra el comprobante de compra')
+def step_comprobante(context):
+    try:
+        # Verificar que la URL contiene la cadena que indica éxito en el pago
+        WebDriverWait(context.driver, 10).until(
+            lambda driver: "success_pay" in driver.current_url
+        )
+        
+        # También se puede verificar la presencia del texto "Comprobante de Pago" en la página
+        comprobante_element = WebDriverWait(context.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//*[text()="Comprobante de Pago"]'))
+        )
+        
+        assert comprobante_element is not None, "Error: No se encontró el comprobante de pago en la página de éxito."
+        print("Redirección exitosa a la página de comprobante de pago.")
+        
+    except TimeoutException:
+        raise AssertionError("Error: La compra no redirigió a la página de éxito de pago dentro del tiempo de espera.")
+
+#Escenario Generar comprobante de pago Fin 
