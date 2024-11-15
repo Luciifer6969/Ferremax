@@ -3,11 +3,11 @@ Feature: Registro de usuario
     Scenario: Registro de usuario exitoso
     Given  que un usuario ingresó a la página FerreMax
     When accede a la opción de Registrarse
-    And completa el campo Nombre Usuario "cliente"
+    And completa el campo Nombre Usuario "cliente1"
     And completa el campo Nombre "cliente"
     And completa el campo Apellido "cliente"
-    And completa el campo Correo electrónico "cliente@gmail.com"
-    And completa el campo Confirme correo electrónico "cliente@gmail.com"
+    And completa el campo Correo electrónico "cliente1@gmail.com"
+    And completa el campo Confirme correo electrónico "cliente1@gmail.com"
     And completa el campo Contraseña "contrasena1"
     And completa el campo Confirme contraseña "contrasena1"
     And presiona el boton Registrarse
