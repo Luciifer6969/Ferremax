@@ -1,14 +1,14 @@
-Proyecto Integracion de plataforma 
+Proyecto Integracion de plataforma
 Caso semestral Ferremax
 
-El sitio web debe incluir las siguientes características:
--
-Sistema de Inicio de Sesión para Clientes, Administradores, Vendedores, Bodegueros y Contadores.
--
-Los Clientes pueden registrarse con su correo electrónico para recibir noticias, ofertas especiales y descuentos en compras de más de cuatro artículos.
--
-Los Administradores tienen cuentas predeterminadas con un usuario y contraseña inicial basados en su nombre y RUT, respectivamente, que deben ser cambiados tras el primer inicio de sesión.
--
+## El sitio web debe incluir las siguientes características:
+
+## Sistema de Inicio de Sesión para Clientes, Administradores, Vendedores, Bodegueros y Contadores.
+
+## Los Clientes pueden registrarse con su correo electrónico para recibir noticias, ofertas especiales y descuentos en compras de más de cuatro artículos.
+
+## Los Administradores tienen cuentas predeterminadas con un usuario y contraseña inicial basados en su nombre y RUT, respectivamente, que deben ser cambiados tras el primer inicio de sesión.
+
 Los Vendedores, Bodegueros y Contadores cuentan con usuarios asignados por el administrador.
 
 Vista Cliente
@@ -20,7 +20,6 @@ Comprar productos mediante un sistema de carrito de compras.
 Seleccionar retiro en tienda o despacho a domicilio.
 •
 Diversas opciones de pago: débito, crédito, transferencia.
-
 
 Vista Vendedor
 •
@@ -38,23 +37,23 @@ Aceptar y preparar pedidos.
 •
 Entregar pedidos a los vendedores para su despacho.
 
-
 Vista Contador
 •
 Confirmar pagos efectuados por transferencia.
 •
 Registrar la entrega de productos a clientes.
 
---------------------------------------------------------------------------------------------
+---
 
+Instalar dependencias
 
-Instalar dependencias 
+pip install django
 pip install mysqlclient
 pip install python-dotenv
 pip install mercadopago
 pip install xhtml2pdf
 pip install pandas
-pip install plotly 
+pip install plotly
 pip install behave
 pip install selenium
-
+pip install pytest pytest-django
