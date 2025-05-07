@@ -4,3 +4,5 @@ __pycache__/
 screenshots
 allure-report
 allure-results
+.scannerwork
+.pytest_cache
